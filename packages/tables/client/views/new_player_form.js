@@ -1,16 +1,22 @@
 /**
  * Created by vbelolapotkov on 24/04/15.
  */
+Template.GameTablesNewPlayerForm.onCreated(function () {
+    this.gameTable = new GameTable(this.data._id);
+});
+
 Template.GameTablesNewPlayerForm.events({
     'submit #newPlayerForm': function (e) {
         e.preventDefault();
-        //todo: add player name validation
+        //todo: add empty player name validation
         var nickname = e.target.elements['playerName'].value;
         var pass = e.target.elements['playerPass'].value;
+        var gameTable = Template.instance().gameTable;
         if(nickname !== '')
-            Meteor.call('addPlayerToTheTable',this._id,nickname,pass, function (err, res) {
-                if(err) console.log(err.reason);
+            gameTable.addPlayer({nickname: nickname, pass: pass}, function (res) {
                 //todo: route to table page when ready
+                if (res)
+                    console.log(res);
             });
         var modalId = '#addPlayerTo-'+this._id;
         $(modalId).modal('hide');

@@ -10,7 +10,8 @@ Package.describe({
 Package.onUse(function(api) {
     var both = ['client', 'server'];
     api.use([
-        'meteor-platform'
+        'meteor-platform',
+        'check'
     ], both);
 
     api.use([
@@ -21,17 +22,21 @@ Package.onUse(function(api) {
 
     //common files
     api.addFiles([
-        'collections.js'
+        'collections.js',
+        'game_table_common.js'
     ], both);
 
     //server files
     api.addFiles([
         'server/init.js',
-        'server/methods.js'
+        'server/methods.js',
+        'server/game_table_server.js'
     ], 'server');
 
     //client files
     api.addFiles([
+        'client/lib/helpers.js',
+        'client/lib/game_table_client.js',
         'client/views/game_tables.html',
         'client/views/game_tables.js',
         'client/views/table.html',
@@ -39,7 +44,6 @@ Package.onUse(function(api) {
         'client/views/new_player_form.html',
         'client/views/new_player_form.js',
         'client/views/tables.css',
-        'client/lib/helpers.js'
     ],'client');
 
     api.export('GameTables', both);

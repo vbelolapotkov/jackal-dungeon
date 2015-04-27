@@ -9,11 +9,11 @@
                         class="badge">{{gameName}}</span></p>
                 <a href="#" class="list-group-item"  data-toggle="collapse" data-target="#{{_id}}
                 .playersList">
-                    Игроки <span class="badge">{{players.length}}</span></a>
-                {{#if players.length}}
-                    <div class="playersList collapse in">
+                    Игроки <span class="badge">{{playersCnt}}</span></a>
+                {{#if playersCnt}}
+                    <div class="playersList collapse">
                         {{#each players}}
-                            <p href="#" class="list-group-item">{{this}}</p>
+                            <p href="#" class="list-group-item">{{nickname}}</p>
                         {{/each}}
                     </div>
                 {{/if}}

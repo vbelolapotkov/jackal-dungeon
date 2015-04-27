@@ -1,9 +1,21 @@
 /**
  * Created by vbelolapotkov on 24/04/15.
  */
+Template.GameTablesTable.onCreated(function () {
+    var instance = this;
+    instance.gameTable = new GameTable(this.data._id);
+    instance.players = instance.gameTable.getPlayers();
+});
+
 Template.GameTablesTable.helpers({
     sitDownLabel: function () {
-        return this.state === 'Занят' ? 'Присоединиться' : 'Сесть за стол'
+        return Template.instance().players.count() > 0 ? 'Присоединиться' : 'Сесть за стол'
+    },
+    players: function () {
+        return Template.instance().players;
+    },
+    playersCnt: function () {
+        return Template.instance().players.count();
     }
 });
 
