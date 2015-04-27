@@ -1,0 +1,9 @@
+<template name="GameTablesList">
+    {{#if isReady}}
+        {{#each tables}}
+            {{> GameTablesTable}}
+        {{/each}}
+    {{else}}
+        {{> spinner}}
+    {{/if}}
+</template>

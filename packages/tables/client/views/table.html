@@ -1,0 +1,28 @@
+<template name="GameTablesTable">
+    <div class="col-sm-6 col-md-4" id="{{_id}}">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>{{displayName}}</h4>
+            </div>
+            <div class="list-group">
+                <p href="#" class="list-group-item">Игра <span
+                        class="badge">{{gameName}}</span></p>
+                <a href="#" class="list-group-item"  data-toggle="collapse" data-target="#{{_id}}
+                .playersList">
+                    Игроки <span class="badge">{{players.length}}</span></a>
+                {{#if players.length}}
+                    <div class="playersList collapse in">
+                        {{#each players}}
+                            <p href="#" class="list-group-item">{{this}}</p>
+                        {{/each}}
+                    </div>
+                {{/if}}
+            </div>
+            <div class="panel-footer clearfix">
+                <div class="pull-right">
+                    <button class="btn btn-primary" name="sitDownBtn">{{sitDownLabel}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

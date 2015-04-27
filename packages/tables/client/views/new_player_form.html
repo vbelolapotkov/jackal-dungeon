@@ -1,0 +1,27 @@
+<template name="GameTablesNewPlayerForm">
+    <div class="modal fade" id="addPlayerTo-{{_id}}">
+    	<div class="modal-dialog">
+    		<div class="modal-content">
+                <div class="modal-body">
+                    <form action="submit" role="form" id="newPlayerForm">
+                        <div class="form-group has-feedback">
+                            <input type="text" class="form-control" name="playerName"
+                                   id="playerNameInput" placeholder="Имя игрока">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="playerPass"
+                                   id="playerPassInput"
+                                   placeholder="Кодовое слово">
+                            <span class="help-block">Кодовое слово необходимо для последующих
+                                подключений к игре</span>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <button type="submit" class="btn btn-primary">Ок</button>
+                        </div>
+                    </form>
+                </div>
+    		</div><!-- /.modal-content -->
+    	</div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</template>

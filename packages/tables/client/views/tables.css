@@ -1,0 +1,7 @@
+.playersList {
+    border-top: 1px solid #ddd;
+}
+
+.playersList > p {
+    margin-left: 10px;
+}
