@@ -17,7 +17,8 @@ Package.onUse(function(api) {
     api.use([
         'reactive-var',
         'sacha:spin',
-        'twbs:bootstrap'
+        'twbs:bootstrap',
+        'iron:router'
     ], 'client');
 
     //common files

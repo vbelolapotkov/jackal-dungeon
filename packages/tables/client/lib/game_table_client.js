@@ -7,8 +7,7 @@ GameTable.prototype.addPlayer = function (player, callback) {
     var tableId = this._id;
     //todo: add check method to check player params
     Meteor.call('addPlayerToTheTable',this._id,player.nickname,player.pass, function (err, res) {
-        if(err) console.log(err.reason);
-        else callback(res);
+        callback(err, res);
     });
 }
 
