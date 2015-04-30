@@ -11,3 +11,15 @@ GameTable.prototype.addPlayer = function (player, callback) {
     });
 }
 
+GameTable.prototype.startGame = function (game) {
+    Meteor.call('startNewGame', this._id, game, function (err) {
+        if(err)console.log(err.reason);
+    });
+}
+
+GameTable.prototype.leaveTable = function (playerName) {
+    Meteor.call('removeFromTable', this._id, playerName, function (err) {
+        if(err)console.log(err.reason);
+    });
+}
+

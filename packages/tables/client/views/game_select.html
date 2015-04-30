@@ -1,0 +1,29 @@
+<template name="GameTablesGameSelect">
+    {{#if isGameListReady}}
+        <h2>Игра еще не началась</h2>
+        <div class="row">
+            {{#each gameInList}}
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a href="#" class="panel-title">
+                                    <span>{{displayName}}</span>
+                                </a>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <p class="text-center"><img src="{{boxImgUrl}}" alt="{{displayName}}" class="img-rounded"/></p>
+                            <p class="text-muted text-justify">{{shortDescription}}</p>
+                        </div>
+                        <div class="panel-footer text-right">
+                            <button class="btn btn-primary" name="startGameBtn">Начать игру</button>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+            </div>
+    {{else}}
+        {{> spinner}}
+    {{/if}}
+</template>

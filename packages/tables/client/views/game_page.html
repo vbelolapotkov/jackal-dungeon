@@ -1,0 +1,57 @@
+<template name="GameTablesGamePage">
+    {{#if loggingIn}}
+        {{> spinner}}
+    {{else}}
+        {{#if loggedIn}}
+            <nav class="navbar navbar-default" role="navigation">
+            	<!-- Brand and toggle get grouped for better mobile display -->
+            	<div class="navbar-header">
+            		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            			<span class="sr-only">Toggle navigation</span>
+            			<span class="icon-bar"></span>
+            			<span class="icon-bar"></span>
+            			<span class="icon-bar"></span>
+            		</button>
+            		<a class="navbar-brand" href="{{pathFor homeRoute}}"><span class="glyphicon glyphicon-home"></span></a>
+            	</div>
+            
+            	<!-- Collect the nav links, forms, and other content for toggling -->
+            	<div class="collapse navbar-collapse navbar-ex1-collapse">
+            		<ul class="nav navbar-nav">
+            			<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Игроки <span class="badge">{{tablePlayersCnt}}</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+								{{#each tablePlayers}}
+									<li><a href="#">{{nickname}}</a></li>
+								{{/each}}
+                            </ul>
+            			</li>
+            		</ul>
+            		<ul class="nav navbar-nav navbar-right">
+            			<li class="dropdown">
+            				<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{playerName}}<b class="caret"></b></a>
+            				<ul class="dropdown-menu">
+								<!--todo: add link handlers-->
+            					<!--<li><a href="#">Изменить имя</a></li>-->
+            					<!--<li><a href="#">Изменить кодовое слово</a></li>-->
+            					<li><a href="#" name="leaveTableLnk">Выйти из-за стола</a></li>
+            				</ul>
+            			</li>
+            		</ul>
+            	</div><!-- /.navbar-collapse -->
+            </nav>
+			{{#if isGameStarted}}
+				<!--game started load game template-->
+				{{#with currentGame}}
+					{{> Template.dynamic template=currentGameTemplate}}
+				{{/with}}
+			{{else}}
+				<!--game not started load select game template-->
+				{{> GameTablesGameSelect}}
+			{{/if}}
+        {{else}}
+			<!--todo: break dependency with top level template-->
+            {{> JDUnauthorized}}
+        {{/if}}
+    {{/if}}
+</template>

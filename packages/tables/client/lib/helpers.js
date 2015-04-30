@@ -2,8 +2,16 @@
  * Created by vbelolapotkov on 24/04/15.
  */
 Routes = {
-    home: 'Home',
-    game: 'App.Game'
+    home: {
+        name: new ReactiveVar('Home')
+    },
+    game: {
+        template: 'GameTablesGamePage',
+        name: 'GameTables.Game',
+        data: function () {
+            return {tableId: this.params.tableId};
+        }
+    }
 };
 
 GameTables = {
@@ -11,10 +19,10 @@ GameTables = {
         return 'GameTablesList';
     },
     setHomeRoute: function (routeName) {
-        Routes.home = routeName;
+        Routes.home.name.set(routeName);
     },
-    setGameRoute: function (routeName) {
-        Routes.game = routeName;
+    setGameUrl: function (routeUrl) {
+        Router.route(routeUrl, Routes.game);
     }
 };
 

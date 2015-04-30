@@ -1,22 +1,22 @@
-
-GameTables = {};
-
 //init collections
 if(Tables.find().count()<1) {
     //insert initial entries
     Tables.insert({
         displayName: "Стол 1",
         seatCnt: 100,
-        gameName: 'Шакал'
+        gameName: 'JackalTheDungeon',
+        gameDisplayName: 'Шакал - подземелье'
     });
     Tables.insert({
         displayName: "Стол 2",
         seatCnt: 100,
-        gameName: ''
+        gameName: '',
+        gameDisplayName: ''
     });
     Tables.insert({
         displayName: "Стол 3",
         seatCnt: 100,
-        gameName: ''
+        gameName: '',
+        gameDisplayName: ''
     });
 }

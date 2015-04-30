@@ -33,7 +33,7 @@ Template.GameTablesTable.events({
 
             if (auth === 'success') {
                 //the modal was closed by form submit
-                Router.go(Routes.game, {tableId: gameTable.getId()});
+                Router.go(Routes.game.name, {tableId: gameTable.getId()});
             }
         });
 

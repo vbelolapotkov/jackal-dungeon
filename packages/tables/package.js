@@ -29,6 +29,7 @@ Package.onUse(function(api) {
 
     //server files
     api.addFiles([
+        'server/helpers.js',
         'server/init.js',
         'server/methods.js',
         'server/game_table_server.js'
@@ -44,6 +45,10 @@ Package.onUse(function(api) {
         'client/views/table.js',
         'client/views/new_player_form.html',
         'client/views/new_player_form.js',
+        'client/views/game_page.html',
+        'client/views/game_page.js',
+        'client/views/game_select.html',
+        'client/views/game_select.js',
         'client/views/tables.css',
     ],'client');
 

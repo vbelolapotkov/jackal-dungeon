@@ -9,3 +9,5 @@ iron:router
 twbs:bootstrap
 simterface:game-tables
 check
+reactive-var
+simterface:game-jd
