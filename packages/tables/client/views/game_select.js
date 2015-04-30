@@ -26,7 +26,6 @@ Template.GameTablesGameSelect.helpers({
 
 Template.GameTablesGameSelect.events({
     'click button[name="startGameBtn"]': function (e) {
-        console.log(this);
         var game = {
             gameName: this.gameName,
             gameDisplayName: this.displayName

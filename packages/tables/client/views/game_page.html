@@ -42,9 +42,13 @@
             </nav>
 			{{#if isGameStarted}}
 				<!--game started load game template-->
-				{{#with currentGame}}
-					{{> Template.dynamic template=currentGameTemplate}}
-				{{/with}}
+				{{#if isGameReady}}
+					{{#with currentGame}}
+						{{> Template.dynamic template=currentGameTemplate}}
+					{{/with}}
+				{{else}}
+					{{> spinner}}
+				{{/if}}
 			{{else}}
 				<!--game not started load select game template-->
 				{{> GameTablesGameSelect}}

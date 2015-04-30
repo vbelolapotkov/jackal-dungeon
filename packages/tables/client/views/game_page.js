@@ -9,7 +9,7 @@ Template.GameTablesGamePage.onCreated(function () {
     instance.loggingIn = new ReactiveVar (true);
     instance.loggedIn = new ReactiveVar (false);
     instance.gameStarted = new ReactiveVar(false);
-
+    instance.gameReady = new ReactiveVar(false);
 
     Meteor.call('checkUserId', function (err, res) {
         if(!err && res.tableId === instance.data.tableId) {
@@ -23,6 +23,13 @@ Template.GameTablesGamePage.onCreated(function () {
         var data = instance.gameTable.getData();
         if(data && data.gameName !== '') instance.gameStarted.set(true);
         else instance.gameStarted.set(false);
+    });
+
+    Tracker.autorun(function () {
+        if(!instance.gameStarted.get()) return;
+        var subs = Meteor.subscribe('gameStarted',instance.gameTable.getData().gameName);
+        if(subs.ready()) instance.gameReady.set(true);
+        else instance.gameReady.set(false);
     });
 });
 
@@ -44,6 +51,9 @@ Template.GameTablesGamePage.helpers({
     },
     'currentGame': function () {
         return Template.instance().gameTable.getData();
+    },
+    'isGameReady': function () {
+        return Template.instance().gameReady.get();
     },
     'currentGameTemplate': function () {
         return Template.instance().gameTable.getGameTemplate();

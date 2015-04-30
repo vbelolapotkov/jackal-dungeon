@@ -16,4 +16,8 @@ if(Meteor.isServer) {
     Meteor.publish('gamesAvailable', function () {
         return Games.find();
     });
+
+    Meteor.publish('gameStarted', function (gameName) {
+        return Games.find({gameName: gameName});
+    })
 }

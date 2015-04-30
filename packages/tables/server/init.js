@@ -4,8 +4,8 @@ if(Tables.find().count()<1) {
     Tables.insert({
         displayName: "Стол 1",
         seatCnt: 100,
-        gameName: 'JackalTheDungeon',
-        gameDisplayName: 'Шакал - подземелье'
+        gameName: '',
+        gameDisplayName: ''
     });
     Tables.insert({
         displayName: "Стол 2",
