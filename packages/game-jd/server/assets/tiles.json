@@ -1,0 +1,18 @@
+{
+  "backUrl": "/img/tile.jpg",
+  "entranceUrl": "/img/tiles/tile_0.jpg",
+  "imgPath": "/img/tiles/",
+  "tiles": [{
+    "id": "2",
+    "imgUrl": "tile_0.jpg",
+    "type": "cavern"
+  },{
+    "id": "3",
+    "imgUrl": "tile_0.jpg",
+    "type": "cavern"
+  },{
+    "id": "4",
+    "imgUrl": "tile_0.jpg",
+    "type": "cavern"
+  }]
+}
