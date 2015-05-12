@@ -18,3 +18,22 @@ Meteor.publish('tilesDeck', function (tableId) {
 });
 
 
+
+Tiles.allow({
+    update: function (userId, doc, fieldNames, modifier) {
+        //todo: add userId checking
+        //todo: think about location change restrictions
+        var allowedFields = [
+            'coords',
+            'angle',
+            'lastChange',
+            'location'];
+        //check if each field in fieldNames is in allowed list
+        var allowed = _.every(fieldNames, function (field) {
+            return _.contains(allowedFields, field);
+        });
+        return allowed;
+    }
+})
+
+

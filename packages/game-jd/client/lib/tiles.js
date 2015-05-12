@@ -83,3 +83,14 @@ EmptyTile = fabric.util.createClass(fabric.Rect, {
         this.callSuper('initialize', options);
     }
 });
+
+Tile.findById = function (id, canvas) {
+    if(!id || !canvas) return;
+    var objects = canvas.getObjects('mapTile');
+    if(!objects) return;
+    var tile = _.find(objects, function (obj) {
+        return obj.tileId === id;
+    });
+
+    return tile;
+}

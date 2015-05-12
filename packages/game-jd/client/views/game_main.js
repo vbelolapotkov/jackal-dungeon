@@ -9,8 +9,9 @@ Template.GameJDMain.onCreated(function () {
 Template.GameJDMain.onRendered(function () {
     var game = this.game;
     Tracker.autorun(function () {
-        if(game.dataReady.get())
+        if(game.dataReady.get()){
             game.initGame('jackalCanvas');
+        }
         //todo: show spinner while loading game data
     });
 });
