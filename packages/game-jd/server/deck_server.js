@@ -1,9 +1,9 @@
 /**
  * Created by vbelolapotkov on 06/05/15.
  */
-Deck = {};
+JDDeckController = {};
 
-Deck.init = function (tiles, options) {
+JDDeckController.init = function (tiles, options) {
     if(!options) return;
     var tableId = options.tableId;
     var backUrl = options.backUrl;
@@ -28,10 +28,10 @@ Deck.init = function (tiles, options) {
             location: 'inDeck'
         });
     });
-    Deck.shuffle(tableId);
+    JDDeckController.shuffle(tableId);
 };
 
-Deck.shuffle = function (tableId) {
+JDDeckController.shuffle = function (tableId) {
     var cursor = Tiles.find({tableId:tableId,location: 'inDeck', type: {$ne: 'back'}});
     var cnt = cursor.count();
     var shuffledIndex = _.shuffle(_.range(cnt));
@@ -50,7 +50,7 @@ Meteor.methods({
             sort: {dIndex: -1},
             limit: 1
         });
-        if(!topTile) throw new Meteor.Error(503, 'Internal error: failed to get top tile from deck');
+        if(!topTile) throw new Meteor.Error(503, 'Internal error: failed to get top tile from deckController');
         Tiles.update(topTile._id, {
             $set: {
                 location: 'onTable',

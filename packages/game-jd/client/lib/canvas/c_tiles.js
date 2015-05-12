@@ -1,6 +1,6 @@
 //Tile object represents unit used to build a map
-Tile = fabric.util.createClass(fabric.Image, {
-    type: 'mapTile',
+cTile = fabric.util.createClass(fabric.Image, {
+    type: 'cTile',
 
     initialize: function (element ,options) {
         options || (options = {});
@@ -33,7 +33,7 @@ Tile = fabric.util.createClass(fabric.Image, {
     }
 });
 
-Tile.prototype.onMouseUp = function (options) {
+cTile.prototype.onMouseUp = function (options) {
     //todo: fix to work with touch devices
     //idea: use object center coords as reference instead of event coords
     var self = this;
@@ -53,17 +53,17 @@ Tile.prototype.onMouseUp = function (options) {
     });
 };
 
-Tile.prototype.onTileSelect = function (options) {
+cTile.prototype.onTileSelect = function (options) {
     this.bringToFront();
 };
 
-Tile.fromURL = function (options, callback) {
+cTile.fromURL = function (options, callback) {
     fabric.util.loadImage(options.url, function (img) {
-        callback && callback(new Tile(img, options))
+        callback && callback(new cTile(img, options))
     });
 };
 
-Tile.async = true;
+cTile.async = true;
 
 EmptyTile = fabric.util.createClass(fabric.Rect, {
     type: "emptyTile",
@@ -83,14 +83,3 @@ EmptyTile = fabric.util.createClass(fabric.Rect, {
         this.callSuper('initialize', options);
     }
 });
-
-Tile.findById = function (id, canvas) {
-    if(!id || !canvas) return;
-    var objects = canvas.getObjects('mapTile');
-    if(!objects) return;
-    var tile = _.find(objects, function (obj) {
-        return obj.tileId === id;
-    });
-
-    return tile;
-}

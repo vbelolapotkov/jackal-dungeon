@@ -13,7 +13,7 @@ JD.initGameCollections = function (tableId) {
         backUrl: tiles.backUrl,
         imgPath: tiles.imgPath
     };
-    Deck.init(tiles.tiles, deckOpts);
+    JDDeckController.init(tiles.tiles, deckOpts);
 };
 
 Meteor.methods({
