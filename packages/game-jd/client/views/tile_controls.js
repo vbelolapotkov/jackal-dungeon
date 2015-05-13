@@ -13,6 +13,13 @@ Template.JDTileControls.onRendered(function () {
         handler: function () {
             self.positionControls(this);
         }
+    }, {
+        name: 'modified',
+        handler: function (options) {
+            //update position when moved
+            if(!options.action || options.action !== 'move')return;
+            self.positionControls(this);
+        }
     }];
     self.tileController.addEventHandlers(tile,eventMap);
 });
@@ -40,7 +47,7 @@ function position (tile) {
     var coords = self.tileController.getCoords(tile);
     var size = self.tileController.getSize(tile);
     var tileLeft = coords.left - size.width/2;
-    var tileBottom = coords.top+size.height/2;
+    var tileBottom = coords.top + size.height/2;
 
     self.controlsContainer.parent().css({position: 'relative'});
     self.controlsContainer.css({top: tileBottom+5, left: tileLeft});

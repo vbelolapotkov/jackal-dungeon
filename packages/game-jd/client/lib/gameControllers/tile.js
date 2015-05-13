@@ -1,9 +1,10 @@
 /**
  * Created by vbelolapotkov on 12/05/15.
  */
-JDTileController = function (tableId, canvas) {
-    this.tableId = tableId;
-    this.tileController = new cTileController(canvas);
+JDTileController = function (options) {
+    this.tableId = options.tableId;
+    this.deckController = options.deckController;
+    this.tileController = new cTileController(options.canvas);
     this.tileController.createContainer({left: 170, top: 60});
 };
 
@@ -14,7 +15,8 @@ JDTileController.prototype.addedTileOnTable = function (doc) {
     self.tileController.addTile({
         url:doc.imgUrl,
         id: doc.tileId,
-        angle: doc.angle
+        angle: doc.angle,
+        coords: doc.coords
     }, function (tile) {
         //set events on new tile
         var eventMap = [{
@@ -40,7 +42,7 @@ JDTileController.prototype.changedTileOnTable = function (newDoc, oldDoc) {
             break;
         case 'coords':
             //todo: add animation object for coords change
-            //self.tileController.move(tileId, newDoc.coords);
+            self.tileController.move(tileId, newDoc.coords);
             break;
     }
 };
@@ -56,6 +58,7 @@ JDTileController.prototype.modifiedTileOnTable = function (tile, options) {
     var self = this;
     if (!options || !options.action) return;
     var actionsMap = {
+        'move': self.moveTileOnTable,
         'rotate': self.rotateTileOnTable,
         'appendToMap': self.appendTileToMap,
         'returnToDeck': self.returnTileToDeck
@@ -63,13 +66,30 @@ JDTileController.prototype.modifiedTileOnTable = function (tile, options) {
     if(actionsMap[options.action]) actionsMap[options.action].call(self,tile);
 };
 
+JDTileController.prototype.moveTileOnTable = function (tile) {
+    var self = this;
+    var coords = self.tileController.getCoords(tile);
+    var tileId = self.tileController.getId(tile);
+    var tileDoc = Tiles.findOne({tableId: self.tableId, location:'onTable', tileId:tileId});
+
+    if(!tileDoc || !tileDoc._id) {
+        console.log('failed find the tile in db for coords update');
+        return;
+    }
+
+    Tiles.update(tileDoc._id, {$set: {
+        coords: coords,
+        lastChange: 'coords'
+    }}, function (err) {
+        if(err) console.log(err.reason);
+    });
+}
 JDTileController.prototype.rotateTileOnTable = function (tile) {
-    //todo: update tile angle in db
     var self = this;
     var angle = self.tileController.getAngle(tile);
     var tileId = self.tileController.getId(tile);
     var tileDoc = Tiles.findOne({tableId: self.tableId, location: 'onTable', tileId: tileId});
-    //todo: remove console msg when tested
+    //todo: change console msg to log
     if(!tileDoc || !tileDoc._id) {
         console.log('failed find the tile in db for angle update');
         return;
@@ -96,7 +116,18 @@ JDTileController.prototype.returnTileToDeck = function (tile) {
         return;
     }
 
-    Tiles.update(tileDoc._id, {$set: {location: 'inDeck'}, $unset: {angle:''}}, function (err) {
+    Tiles.update(tileDoc._id, {
+        $set: {
+            location: 'inDeck',
+            lastChange:'returnToDeck'
+        },
+        $unset: {
+            angle:'',
+            coords:'',
+            ownerId:''
+        }
+    }, function (err) {
         if (err) console.log(err.reason);
+        else self.deckController.shuffle();
     });
 };

@@ -29,4 +29,4 @@ JDSynchronizer.prototype.setTableObserver = function () {
             self.deckController.unlock();
         }
     });
-}
+};

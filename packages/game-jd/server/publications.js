@@ -27,7 +27,8 @@ Tiles.allow({
             'coords',
             'angle',
             'lastChange',
-            'location'];
+            'location',
+            'ownerId'];
         //check if each field in fieldNames is in allowed list
         var allowed = _.every(fieldNames, function (field) {
             return _.contains(allowedFields, field);

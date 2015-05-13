@@ -54,12 +54,16 @@ Meteor.methods({
         Tiles.update(topTile._id, {
             $set: {
                 location: 'onTable',
-                coords: { x: 0, y: 0 },
+                //coords: { x: 0, y: 0 },
                 ownerId: this.userId
             },
             $unset: {
                 dIndex: ""
             }
         });
+    },
+    'DeckShuffle': function (tableId) {
+        //todo: add check if action allowed to current user
+        JDDeckController.shuffle(tableId);
     }
 });

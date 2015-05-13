@@ -22,7 +22,11 @@ JD.prototype.initGame = function (canvasId) {
     self.canvas.setHeight(window.innerHeight*0.9);
 
     self.deckController = new JDDeckController(self._id,self.canvas);
-    self.tileController = new JDTileController(self._id,self.canvas);
+    self.tileController = new JDTileController({
+        tableId: self._id,
+        canvas: self.canvas,
+        deckController: self.deckController
+    });
     self.gameSync = new JDSynchronizer({
         tableId: self._id,
         deckController: self.deckController,

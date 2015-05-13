@@ -47,6 +47,12 @@ JDDeckController.prototype.getFromTop = function () {
     });
 };
 
+JDDeckController.prototype.shuffle = function () {
+    Meteor.call('DeckShuffle', this.tableId, function (err) {
+        if(err) console.log(err.reason);
+    });
+}
+
 JDDeckController.prototype.lock = function () {
     this.isLocked = true;
 };

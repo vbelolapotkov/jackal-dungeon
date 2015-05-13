@@ -19,7 +19,7 @@ cTile = fabric.util.createClass(fabric.Image, {
         this.callSuper('initialize', element, options);
         this.set('tileId', options.id);
         //this.on('selected', this.onTileSelect);
-        //this.on('mouseup', this.onMouseUp);
+        this.on('mouseup', this.onMouseUp);
     },
 
     toObject: function() {
@@ -34,22 +34,17 @@ cTile = fabric.util.createClass(fabric.Image, {
 });
 
 cTile.prototype.onMouseUp = function (options) {
-    //todo: fix to work with touch devices
     //idea: use object center coords as reference instead of event coords
     var self = this;
-    var center = {
-        x: Math.floor(self.getLeft() + self.getWidth()/2),
-        y: Math.floor(self.getTop() + self.getHeight()/2)
-    };
     var coords = {
-        x: Math.floor(center.x/100)*100,
-        y: Math.floor(center.y/100)*100
+        left: Math.round(self.getLeft()/10)*10,
+        top: Math.round(self.getTop()/10)*10
     };
-    self.animate({
-        left: coords.x,
-        top: coords.y
-    }, {
-        onChange: self.canvas.renderAll.bind(self.canvas)
+    self.animate(coords, {
+        onChange: self.canvas.renderAll.bind(self.canvas),
+        onComplete: function () {
+            self.fire('modified', {action: 'move'});
+        }
     });
 };
 

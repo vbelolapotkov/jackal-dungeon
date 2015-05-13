@@ -41,12 +41,17 @@ cTileController.prototype.createDeck = function (backUrl, callback) {
 
 cTileController.prototype.addTile = function (options, callback) {
     var self = this;
+    if(!options.coords)
+        options.coords = {
+            left: self.container.getLeft(),
+            top: self.container.getTop()
+        };
     var tileOpts = {
         url:options.url,
         id: options.id,
         angle: options.angle || 0,
-        left: self.container.getLeft(),
-        top: self.container.getTop()
+        left: options.coords.left,
+        top: options.coords.top
     };
     cTile.fromURL(tileOpts, function (tile) {
         self.canvas.add(tile);
@@ -75,6 +80,20 @@ cTileController.prototype.getTile = function (tile) {
         return this.findById(tile);
     }
     else return tile;
+};
+
+cTileController.prototype.move = function (tile, newCoords, callback) {
+    var self = this;
+    var t = self.getTile(tile);
+    var coords = self.getCoords(t);
+    if(coords.left === newCoords.left && coords.top === newCoords.top) return;
+
+    t.animate(newCoords, {
+        onChange: self.canvas.renderAll.bind(self.canvas),
+        onComplete: function () {
+            if(callback) callback(t);
+        }
+    })
 };
 
 cTileController.prototype.rotate = function (tile, angle, callback) {
