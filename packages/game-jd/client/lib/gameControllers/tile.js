@@ -4,15 +4,17 @@
 JDTileController = function (options) {
     this.tableId = options.tableId;
     this.deckController = options.deckController;
+    this.mapController = options.mapController;
     this.tileController = new cTileController(options.canvas);
     this.tileController.createContainer({left: 170, top: 60});
 };
 
-JDTileController.prototype.addedTileOnTable = function (doc) {
+JDTileController.prototype.dbAddedTileOnTable = function (doc) {
     //todo: add animation for add action
     var self = this;
-    this.tileOnTableId = doc.tileId;
-    self.tileController.addTile({
+    self.deckController.lock();
+    self.tileOnTableId = doc.tileId;
+    self.tileController.addNewTile({
         url:doc.imgUrl,
         id: doc.tileId,
         angle: doc.angle,
@@ -22,7 +24,7 @@ JDTileController.prototype.addedTileOnTable = function (doc) {
         var eventMap = [{
             name: 'modified',
             handler: function (options) {
-                self.modifiedTileOnTable(this, options);
+                self.handleModifiedTileOnTable(this, options);
             }
         }];
         self.tileController.addEventHandlers(tile, eventMap);
@@ -31,7 +33,7 @@ JDTileController.prototype.addedTileOnTable = function (doc) {
     });
 };
 
-JDTileController.prototype.changedTileOnTable = function (newDoc, oldDoc) {
+JDTileController.prototype.dbChangedTileOnTable = function (newDoc, oldDoc) {
     var self = this;
     var tileId = newDoc.tileId;
 
@@ -47,26 +49,27 @@ JDTileController.prototype.changedTileOnTable = function (newDoc, oldDoc) {
     }
 };
 
-JDTileController.prototype.removedTileFromTable = function (oldDoc) {
+JDTileController.prototype.dbRemovedTileFromTable = function (oldDoc) {
     var self=this;
     Blaze.remove(self.tileControlsInstance);
     self.tileController.removeTile(self.tileOnTableId);
     self.tileOnTable = undefined;
+    self.deckController.unlock();
 };
 
-JDTileController.prototype.modifiedTileOnTable = function (tile, options) {
+JDTileController.prototype.handleModifiedTileOnTable = function (tile, options) {
     var self = this;
     if (!options || !options.action) return;
     var actionsMap = {
-        'move': self.moveTileOnTable,
-        'rotate': self.rotateTileOnTable,
-        'appendToMap': self.appendTileToMap,
+        'move': self.handleMovedTileOnTable,
+        'rotate': self.handleRotatedTileOnTable,
+        'appendToMap': self.attachTileToMap,
         'returnToDeck': self.returnTileToDeck
-    }
+    };
     if(actionsMap[options.action]) actionsMap[options.action].call(self,tile);
 };
 
-JDTileController.prototype.moveTileOnTable = function (tile) {
+JDTileController.prototype.handleMovedTileOnTable = function (tile) {
     var self = this;
     var coords = self.tileController.getCoords(tile);
     var tileId = self.tileController.getId(tile);
@@ -83,8 +86,9 @@ JDTileController.prototype.moveTileOnTable = function (tile) {
     }}, function (err) {
         if(err) console.log(err.reason);
     });
-}
-JDTileController.prototype.rotateTileOnTable = function (tile) {
+};
+
+JDTileController.prototype.handleRotatedTileOnTable = function (tile) {
     var self = this;
     var angle = self.tileController.getAngle(tile);
     var tileId = self.tileController.getId(tile);
@@ -100,12 +104,17 @@ JDTileController.prototype.rotateTileOnTable = function (tile) {
     });
 };
 
-JDTileController.prototype.appendTileToMap = function (tile) {
+JDTileController.prototype.attachTileToMap = function (tile) {
     //todo: change tile location and remove controls
-}
+    var self = this;
+    self.mapController.attachTile(tile, function (success) {
+        if(!success) return;
+        self.deckController.unlock();
+        Blaze.remove(self.tileControlsInstance);
+    });
+};
 
 JDTileController.prototype.returnTileToDeck = function (tile) {
-    //todo: change tile location and remove it from canvas with controls
     var self = this;
     var tileId = self.tileController.getId(tile);
     var tileDoc = Tiles.findOne({tableId: self.tableId, location: 'onTable', tileId: tileId});

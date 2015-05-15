@@ -17,19 +17,25 @@ JD = function (tableId) {
 
 JD.prototype.initGame = function (canvasId) {
     var self = this;
-    self.canvas = new fabric.Canvas(canvasId);
+    self.canvas = new CanvasExt(canvasId);
     self.canvas.setWidth(window.innerWidth*0.9);
     self.canvas.setHeight(window.innerHeight*0.9);
 
     self.deckController = new JDDeckController(self._id,self.canvas);
+    self.mapController = new JDMapController({
+        tableId: self._id,
+        canvas: self.canvas
+    });
     self.tileController = new JDTileController({
         tableId: self._id,
         canvas: self.canvas,
-        deckController: self.deckController
+        deckController: self.deckController,
+        mapController: self.mapController
     });
     self.gameSync = new JDSynchronizer({
         tableId: self._id,
         deckController: self.deckController,
-        tileController: self.tileController
+        tileController: self.tileController,
+        mapController: self.mapController
     });
 };

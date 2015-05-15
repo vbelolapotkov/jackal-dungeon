@@ -34,11 +34,14 @@ Package.onUse(function (api) {
 
     api.addFiles([
         'client/lib/canvas/fabric.js',
+        'client/lib/canvas/canvas_ext.js',
         'client/lib/canvas/c_tiles.js',
+        'client/lib/canvas/c_map.js',
+        'client/lib/canvasControllers/map_controller.js',
         'client/lib/canvasControllers/tile_controller.js',
-        'client/lib/gameControllers/tile.js',
         'client/lib/gameControllers/deck.js',
         'client/lib/gameControllers/map.js',
+        'client/lib/gameControllers/tile.js',
         'client/lib/sync.js',
         'client/lib/jd.js',
         'client/views/tile_controls.html',

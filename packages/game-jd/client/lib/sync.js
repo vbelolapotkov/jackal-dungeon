@@ -5,9 +5,11 @@ JDSynchronizer = function (options) {
     this.tableId = options.tableId;
     this.deckController = options.deckController;
     this.tileController = options.tileController;
+    this.mapController = options.mapController;
 
     this.setTableObserver();
-}
+    this.setMapObserver();
+};
 
 JDSynchronizer.prototype.setTableObserver = function () {
     var self = this;
@@ -17,16 +19,27 @@ JDSynchronizer.prototype.setTableObserver = function () {
     });
     self.tableObserver = tilesOnTable.observe({
         added: function (doc) {
-            self.deckController.lock();
-            self.tileController.addedTileOnTable(doc);
+            self.tileController.dbAddedTileOnTable(doc);
         },
 
         changed: function (newDoc, oldDoc) {
-            self.tileController.changedTileOnTable(newDoc, oldDoc);
+            self.tileController.dbChangedTileOnTable(newDoc, oldDoc);
         },
         removed: function (oldDoc) {
-            self.tileController.removedTileFromTable(oldDoc);
-            self.deckController.unlock();
+            self.tileController.dbRemovedTileFromTable(oldDoc);
+        }
+    });
+};
+
+JDSynchronizer.prototype.setMapObserver = function () {
+    var self = this;
+    var tilesOnMap = Tiles.find({
+        tableId: self.tableId,
+        location: 'onMap'
+    });
+    self.mapObserver = tilesOnMap.observe({
+        added: function (doc) {
+            self.mapController.addedTileOnMap(doc);
         }
     });
 };

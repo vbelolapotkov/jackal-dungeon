@@ -18,7 +18,7 @@ cTile = fabric.util.createClass(fabric.Image, {
         options.originY || (options.originY = 'center');
         this.callSuper('initialize', element, options);
         this.set('tileId', options.id);
-        //this.on('selected', this.onTileSelect);
+        this.on('selected', this.onTileSelect);
         this.on('mouseup', this.onMouseUp);
     },
 
@@ -41,6 +41,7 @@ cTile.prototype.onMouseUp = function (options) {
         top: Math.round(self.getTop()/10)*10
     };
     self.animate(coords, {
+        duration: 100,
         onChange: self.canvas.renderAll.bind(self.canvas),
         onComplete: function () {
             self.fire('modified', {action: 'move'});
@@ -71,6 +72,7 @@ EmptyTile = fabric.util.createClass(fabric.Rect, {
         options.fill || (options.fill = '#fff');
         options.hoverCursor || (options.hoverCursor = 'none');
         options.hasControls || (options.hasControls = false);
+        options.hasBorders || (options.hasBorders = false);
         options.selectable  || (options.selectable = false);
         options.originX || (options.originX = 'center');
         options.originY || (options.originY = 'center');

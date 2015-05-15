@@ -39,4 +39,4 @@ Template.GameTablesTable.events({
 
         $(modalId).modal('show');
     }
-})
+});

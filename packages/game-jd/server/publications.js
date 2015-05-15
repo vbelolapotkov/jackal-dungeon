@@ -25,16 +25,16 @@ Tiles.allow({
         //todo: think about location change restrictions
         var allowedFields = [
             'coords',
+            'mCoords',
             'angle',
             'lastChange',
             'location',
             'ownerId'];
         //check if each field in fieldNames is in allowed list
-        var allowed = _.every(fieldNames, function (field) {
+        return _.every(fieldNames, function (field) {
             return _.contains(allowedFields, field);
         });
-        return allowed;
     }
-})
+});
 
 

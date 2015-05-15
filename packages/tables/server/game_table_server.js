@@ -3,6 +3,7 @@
  */
 GameTable.prototype.addNewPlayer = function (name, pass) {
     var tableId = this._id;
+    //noinspection UnnecessaryLocalVariableJS
     var id = Players.insert({
         tableId: tableId,
         nickname: name,
@@ -16,7 +17,7 @@ GameTable.prototype.checkPlayerPass = function (name, pass) {
     var player = Players.findOne({tableId: tableId, nickname: name});
     if(!player) return false;
     return player.password === pass;
-}
+};
 
 GameTable.prototype.parseUserId = function (userId) {
     check(userId, String);
@@ -35,7 +36,7 @@ GameTable.prototype.startGame = function (game) {
             gameName: game.gameName,
             gameDisplayName: game.gameDisplayName
         }});
-}
+};
 
 GameTable.prototype.leaveTable = function (nickname) {
     var tableId = this._id;
@@ -46,4 +47,4 @@ GameTable.prototype.leaveTable = function (nickname) {
             Tables.update(tableId, {$set: {gameName:'', gameDisplayName:''}});
         }
     });
-}
+};

@@ -39,7 +39,7 @@ cTileController.prototype.createDeck = function (backUrl, callback) {
     });
 };
 
-cTileController.prototype.addTile = function (options, callback) {
+cTileController.prototype.addNewTile = function (options, callback) {
     var self = this;
     if(!options.coords)
         options.coords = {
@@ -60,9 +60,9 @@ cTileController.prototype.addTile = function (options, callback) {
 };
 
 cTileController.prototype.removeTile = function (tile) {
-    var t = this.getTile(tile)
+    var t = this.getTile(tile);
     this.canvas.remove(t);
-}
+};
 
 cTileController.prototype.addEventHandlers = function (tile,eventMap) {
     //add event handlers for tile
@@ -112,7 +112,7 @@ cTileController.prototype.rotate = function (tile, angle, callback) {
 
 cTileController.prototype.getId = function (tile) {
     return tile.id;
-}
+};
 
 cTileController.prototype.getCoords = function (tile) {
     var t = this.getTile(tile);
@@ -130,6 +130,14 @@ cTileController.prototype.getSize = function (tile) {
     }
 };
 
+cTileController.prototype.getCenterPoint = function (tile) {
+    var t = this.getTile(tile);
+    return {
+        left: Math.round(t.getLeft() + t.getWidth()/2),
+        top:  Math.round(t.getTop() + t.getHeight()/2)
+    }
+};
+
 cTileController.prototype.getAngle = function (tile) {
     var t = this.getTile(tile);
     return t.getAngle();
@@ -138,4 +146,26 @@ cTileController.prototype.getAngle = function (tile) {
 cTileController.prototype.fireEvent = function (tile, event, options) {
     var t = this.getTile(tile);
     t.fire(event, options);
+};
+
+cTileController.prototype.remove = function (tile) {
+    var t=this.getTile(tile);
+    t.remove();
+};
+
+cTileController.prototype.set = function (tile, options) {
+    var t=this.getTile(tile);
+    t.set(options);
+};
+
+cTileController.prototype.setCoordsWithUpdate = function (tile, options) {
+    var t=this.getTile(tile);
+    t.set(options);
+    t.setCoords();
+};
+
+cTileController.prototype.isTile = function (tile) {
+    //checks if the object is tile
+    if(!tile) return false;
+    return tile.canvas && tile.type === 'cTile';
 }

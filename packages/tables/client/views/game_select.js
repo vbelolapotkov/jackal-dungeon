@@ -32,4 +32,4 @@ Template.GameTablesGameSelect.events({
         };
         Template.instance().gameTable.startGame(game);
     }
-})
+});

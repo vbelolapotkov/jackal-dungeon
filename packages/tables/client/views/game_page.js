@@ -72,4 +72,4 @@ Template.GameTablesGamePage.events({
         Template.instance().gameTable.leaveTable();
         Router.go(Routes.home.name.get());
     }
-})
+});

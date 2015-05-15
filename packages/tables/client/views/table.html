@@ -5,14 +5,14 @@
                 <h4>{{displayName}}</h4>
             </div>
             <div class="list-group">
-                <p href="#" class="list-group-item">Игра <span
-                        class="badge">{{gameDisplayName}}</span></p>
+                <a href="#" class="list-group-item">Игра <span
+                        class="badge">{{gameDisplayName}}</span></a>
                 <a href="#" class="list-group-item"  data-toggle="collapse" data-target="#{{_id}} .playersList">
                 Игроки <span class="badge">{{playersCnt}}</span></a>
                 {{#if playersCnt}}
                     <div class="playersList collapse">
                         {{#each players}}
-                            <p href="#" class="list-group-item">{{nickname}}</p>
+                            <a href="#" class="list-group-item">{{nickname}}</a>
                         {{/each}}
                     </div>
                 {{/if}}
