@@ -61,8 +61,7 @@ cTile.prototype.onTileSelect = function (options) {
 
 cTile.fromURL = function (options, callback) {
     //todo: replace fromURL method in the project
-    //method for compatibility
-    //use tile = new cTile(options);
+    //async method with image loading before tile creation
     fabric.util.loadImage(options.url, function (img) {
         callback && callback(new cTile(options, img))
     });

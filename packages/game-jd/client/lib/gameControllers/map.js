@@ -26,12 +26,13 @@ JDMapController = function (options) {
         }
         tOptions.push(opts);
     });
-    self.mapCreated = self.mapController.createMap(tOptions);
-    if(!self.mapCreated)
-        console.log('Failed to create map');
+    self.mapController.createMap(tOptions, function (result) {
+        self.mapCreated = result;
+    });
 };
 
 JDMapController.prototype.dbAddedTileOnMap = function (doc) {
+    if(!this.mapCreated) return;
     if (this.mapController.hasMapTileAt(doc.mCoords)) {
         return;
     }
