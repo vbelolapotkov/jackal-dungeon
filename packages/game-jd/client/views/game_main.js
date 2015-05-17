@@ -7,8 +7,9 @@ Template.GameJDMain.onCreated(function () {
 });
 
 Template.GameJDMain.onRendered(function () {
+    console.log('Main: template rendered');
     var game = this.game;
-    Tracker.autorun(function () {
+    Tracker.autorun(function (c) {
         if(game.dataReady.get()){
             game.initGame('jackalCanvas');
         }

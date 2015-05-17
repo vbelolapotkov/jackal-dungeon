@@ -39,7 +39,7 @@ JDSynchronizer.prototype.setMapObserver = function () {
     });
     self.mapObserver = tilesOnMap.observe({
         added: function (doc) {
-            self.mapController.addedTileOnMap(doc);
+            self.mapController.dbAddedTileOnMap(doc);
         }
     });
 };

@@ -2,7 +2,13 @@
 cTile = fabric.util.createClass(fabric.Image, {
     type: 'cTile',
 
-    initialize: function (element ,options) {
+    initialize: function (options, element) {
+        //element is optional
+        //method creates img from options.url if element is not passed
+        if(!element) {
+            element = document.createElement('img');
+            element.src = options.url;
+        }
         options || (options = {});
         options.width || (options.width = 100);
         options.height || (options.height = 100);
@@ -54,8 +60,11 @@ cTile.prototype.onTileSelect = function (options) {
 };
 
 cTile.fromURL = function (options, callback) {
+    //todo: replace fromURL method in the project
+    //method for compatibility
+    //use tile = new cTile(options);
     fabric.util.loadImage(options.url, function (img) {
-        callback && callback(new cTile(img, options))
+        callback && callback(new cTile(options, img))
     });
 };
 

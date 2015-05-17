@@ -11,15 +11,16 @@ JDDeckController = function (tableId,canvas) {
     //add containers for deckController and new tiles
     self.deckController.createContainer({left:60, top:60});
 
-    //display deck as tile back img
     self.tiles = Tiles.find({
         tableId:tableId,
         type: {$ne: 'back'},
         location: 'inDeck'
     },{
-        sort:{dIndex: -1},
-        limit: 1
+        sort:{dIndex: -1}
+        //limit: 1
     });
+
+    //display deck as tile back img
     var backUrl = Tiles.findOne({tableId: tableId, type: 'back'}).backUrl;
     self.deckController.createDeck(backUrl, function (tile) {
         //add event handler for click on deck

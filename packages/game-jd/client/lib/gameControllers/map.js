@@ -3,24 +3,46 @@
  */
 //object representing game map
 JDMapController = function (options) {
-    this.tableId = options.tableId;
-    this.mapController = new cMapController({
+    var self = this;
+    self.tableId = options.tableId;
+    self.mapController = new cMapController({
         canvas: options.canvas
     });
+    self.mapCreated = false;
+
+    var mapTiles = Tiles.find({
+        tableId: self.tableId,
+        location: 'onMap'
+        //type: 'entrance'
+    }, {reactive:false}).fetch();
+
+    var tOptions = [];
+    _.each(mapTiles, function (doc) {
+        var opts = {
+            url:doc.imgUrl,
+            id: doc.tileId,
+            mCoords: doc.mCoords,
+            type: doc.type
+        }
+        tOptions.push(opts);
+    });
+    self.mapCreated = self.mapController.createMap(tOptions);
+    if(!self.mapCreated)
+        console.log('Failed to create map');
 };
 
-JDMapController.prototype.addedTileOnMap = function (doc) {
-    if(doc.type === 'entrance') this.mapController.createMap({
-        url:doc.imgUrl,
-        id: doc.tileId
-        //angle: doc.angle,
-        //coords: doc.coords
-    });
-    else {
-        console.log(this.mapController);
-        //todo: handle adding tile on map by sync
-        //this.mapController.attachTile(doc,doc.mCoords);
+JDMapController.prototype.dbAddedTileOnMap = function (doc) {
+    if (this.mapController.hasMapTileAt(doc.mCoords)) {
+        return;
     }
+    //todo: add animation on adding tile to table
+    var opts = {
+        url: doc.imgUrl,
+        id: doc.tileId,
+        angle: doc.angle,
+        type: doc.type
+    };
+    this.mapController.attachTile(opts,doc.mCoords);
 };
 
 JDMapController.prototype.attachTile = function (tile, callback) {
@@ -41,6 +63,7 @@ JDMapController.prototype.attachTile = function (tile, callback) {
         return;
     }
 
+    self.mapController.attachTile(tile, mCoords);
     Tiles.update(tileDoc._id, {
         $set: {
             location: 'onMap',
@@ -57,24 +80,6 @@ JDMapController.prototype.attachTile = function (tile, callback) {
             callback(false);
             return;
         }
-        self.mapController.attachTile(tile, mCoords);
-        self.mapController.addEmptyTiles(self.getEmptyNeighbors(mCoords));
         callback(true);
     });
-};
-
-JDMapController.prototype.getEmptyNeighbors = function (mCoords) {
-    var candidates = [
-        {x: mCoords.x + 1, y: mCoords.y},
-        {x: mCoords.x - 1, y: mCoords.y},
-        {x: mCoords.x    , y: mCoords.y + 1},
-        {x: mCoords.x    , y: mCoords.y - 1},
-    ];
-    var result = [];
-    var self = this;
-    _.each(candidates, function (c) {
-        if(!self.mapController.hasTileAt(c))
-            result.push(c);
-    });
-    return result;
 };

@@ -3,9 +3,15 @@ JD = function (tableId) {
     this._id = tableId || 'demoGame';
     this.dataReady = new ReactiveVar(false);
     var self = this;
-    var ms = Meteor.subscribe('dungeonMap', self._id);
-    var ds = Meteor.subscribe('tilesDeck', self._id);
-    var ts = Meteor.subscribe('tilesOnTable', self._id);
+    var ms = Meteor.subscribe('dungeonMap', self._id, function () {
+        console.log('JD: Map subscription is ready');
+    });
+    var ds = Meteor.subscribe('tilesDeck', self._id, function () {
+        console.log('JD: Deck subscription is ready');
+    });
+    var ts = Meteor.subscribe('tilesOnTable', self._id, function () {
+        console.log('JD: Table subscription is ready');
+    });
     //subscribe to data if available
     Tracker.autorun(function (c) {
         if(ms.ready() && ds.ready() && ts.ready()) {
@@ -16,6 +22,7 @@ JD = function (tableId) {
 };
 
 JD.prototype.initGame = function (canvasId) {
+    console.log('JD: Initializing Game ...');
     var self = this;
     self.canvas = new CanvasExt(canvasId);
     self.canvas.setWidth(window.innerWidth*0.9);
@@ -38,4 +45,5 @@ JD.prototype.initGame = function (canvasId) {
         tileController: self.tileController,
         mapController: self.mapController
     });
+    console.log('JD: Game Initialized');
 };

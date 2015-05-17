@@ -19,20 +19,6 @@ cMap = fabric.util.createClass(fabric.Group, {
     _render: function(ctx) {
         this.callSuper('_render', ctx);
     }
-
-    //addWithUpdate: function (object) {
-    //    //console.log('restoring object state');
-    //    //this._restoreObjectsState();
-    //    if (object) {
-    //        this._objects.push(object);
-    //        object.group = this;
-    //    }
-    //    // since _restoreObjectsState set objects inactive
-    //    this.forEachObject(this._setObjectActive, this);
-    //    this._calcBounds();
-    //    this._updateObjectsCoords();
-    //    return this;
-    //}
 });
 
 cMap.prototype.onMouseUp = function (options) {
