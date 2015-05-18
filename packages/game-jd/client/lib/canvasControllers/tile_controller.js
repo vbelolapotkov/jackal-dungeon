@@ -46,6 +46,8 @@ cTileController.prototype.addNewTile = function (options, callback) {
             left: self.container.getLeft(),
             top: self.container.getTop()
         };
+    //if relative coords supplied with reference than convert to abs
+    if(options.ref) options.coords = rel2abs(options.coords, options.ref);
     var tileOpts = {
         url:options.url,
         id: options.id,
@@ -96,6 +98,12 @@ cTileController.prototype.move = function (tile, newCoords, callback) {
     })
 };
 
+cTileController.prototype.moveRel = function (tile, rel, ref, callback) {
+    //ref - reference point
+    var newCoords = rel2abs(rel, ref);
+    this.move(tile,newCoords,callback);
+}
+
 cTileController.prototype.rotate = function (tile, angle, callback) {
     var self = this;
     var t = self.getTile(tile);
@@ -120,6 +128,12 @@ cTileController.prototype.getCoords = function (tile) {
         left: t.getLeft(),
         top: t.getTop()
     }
+};
+
+cTileController.prototype.getRelCoords = function (tile, ref) {
+    //ref - reference point for relative coords
+    var abs = this.getCoords(tile);
+    return abs2rel(abs, ref);
 };
 
 cTileController.prototype.getSize = function (tile) {
@@ -168,4 +182,18 @@ cTileController.prototype.isTile = function (tile) {
     //checks if the object is tile
     if(!tile) return false;
     return tile.canvas && tile.type === 'cTile';
+}
+
+function rel2abs (rel, ref) {
+    return {
+        left: rel.left + ref.left,
+        top: rel.top + ref.top
+    };
+};
+
+function abs2rel (abs, ref) {
+    return {
+        left: abs.left - ref.left,
+        top: abs.top - ref.top
+    }
 }

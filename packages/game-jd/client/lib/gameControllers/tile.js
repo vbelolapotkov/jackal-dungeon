@@ -14,11 +14,14 @@ JDTileController.prototype.dbAddedTileOnTable = function (doc) {
     var self = this;
     self.deckController.lock();
     self.tileOnTableId = doc.tileId;
+    var eCoords;
+    if(doc.coords) eCoords = self.mapController.getEntranceCoords();
     self.tileController.addNewTile({
         url:doc.imgUrl,
         id: doc.tileId,
         angle: doc.angle,
-        coords: doc.coords
+        coords: doc.coords,
+        ref: eCoords
     }, function (tile) {
         //set events on new tile
         var eventMap = [{
@@ -44,7 +47,8 @@ JDTileController.prototype.dbChangedTileOnTable = function (newDoc, oldDoc) {
             break;
         case 'coords':
             //todo: add animation object for coords change
-            self.tileController.move(tileId, newDoc.coords);
+            var eCoords = self.mapController.getEntranceCoords();
+            self.tileController.moveRel(tileId, newDoc.coords,eCoords);
             break;
     }
 };
@@ -71,7 +75,8 @@ JDTileController.prototype.handleModifiedTileOnTable = function (tile, options) 
 
 JDTileController.prototype.handleMovedTileOnTable = function (tile) {
     var self = this;
-    var coords = self.tileController.getCoords(tile);
+    var eCoords = self.mapController.getEntranceCoords();
+    var coords = self.tileController.getRelCoords(tile, eCoords);
     var tileId = self.tileController.getId(tile);
     var tileDoc = Tiles.findOne({tableId: self.tableId, location:'onTable', tileId:tileId});
 

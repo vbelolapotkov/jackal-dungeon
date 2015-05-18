@@ -41,6 +41,12 @@ cMapController.prototype.getEntrance = function () {
     return this.map.item(0);
 };
 
+cMapController.prototype.getEntranceCoords = function () {
+    var e = this.getEntrance();
+    var eCoords = this.tileController.getCoords(e);
+    return this.coordsMap2Canvas(eCoords);
+};
+
 cMapController.prototype.getTileById = function (id) {
     var tile;
     this.map.forEachObject(function (mTile) {

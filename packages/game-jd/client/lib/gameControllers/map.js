@@ -9,11 +9,13 @@ JDMapController = function (options) {
         canvas: options.canvas
     });
     self.mapCreated = false;
+};
 
+JDMapController.prototype.loadMap = function (callback) {
+    var self = this;
     var mapTiles = Tiles.find({
         tableId: self.tableId,
         location: 'onMap'
-        //type: 'entrance'
     }, {reactive:false}).fetch();
 
     var tOptions = [];
@@ -28,6 +30,7 @@ JDMapController = function (options) {
     });
     self.mapController.createMap(tOptions, function (result) {
         self.mapCreated = result;
+        callback(result);
     });
 };
 
@@ -83,4 +86,8 @@ JDMapController.prototype.attachTile = function (tile, callback) {
         }
         callback(true);
     });
+};
+
+JDMapController.prototype.getEntranceCoords = function () {
+    return this.mapController.getEntranceCoords();
 };
