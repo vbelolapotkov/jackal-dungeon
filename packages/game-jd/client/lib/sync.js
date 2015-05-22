@@ -9,6 +9,7 @@ JDSynchronizer = function (options) {
 
     this.setTableObserver();
     this.setMapObserver();
+    this.setDeckObserver();
 };
 
 JDSynchronizer.prototype.setTableObserver = function () {
@@ -43,3 +44,20 @@ JDSynchronizer.prototype.setMapObserver = function () {
         }
     });
 };
+
+JDSynchronizer.prototype.setDeckObserver = function () {
+    var self = this;
+    var tilesInDeck = Tiles.find({
+        tableId: this.tableId,
+        type: {$ne: 'back'},
+        location: 'inDeck'
+    });
+    self.deckObserver = tilesInDeck.observe({
+        added: function (doc) {
+            self.deckController.checkEmpty();
+        },
+        removed: function (oldDoc) {
+            self.deckController.checkEmpty();
+        }
+    })
+}

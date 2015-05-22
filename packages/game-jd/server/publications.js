@@ -25,7 +25,7 @@ Tiles.allow({
         //todo: think about location change restrictions
         var allowedFields = [
             'coords',
-            'mCoords',
+            'dCoords',
             'angle',
             'lastChange',
             'location',

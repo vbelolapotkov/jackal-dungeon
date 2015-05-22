@@ -4,32 +4,50 @@
 JDDeckController = function (tableId,canvas) {
     //todo: add deck observer to monitor tiles returned to deck
     //set instance variables
-    var self = this;
-    self.tableId = tableId;
-    self.deckController = new cTileController (canvas);
+    this.tableId = tableId;
+    this.deckController = new cTileController (canvas);
+    this.deckLoaded = false;
+    this.deckEmpty = true;
 
+    //this.loadDeck(); //may be this should be called externally
+};
+
+JDDeckController.prototype.loadDeck = function () {
     //add containers for deckController and new tiles
-    self.deckController.createContainer({left:60, top:60});
+    this.deckController.createContainer({left:60, top:60});
 
-    self.tiles = Tiles.find({
-        tableId:tableId,
+    this.tilesCursor = Tiles.find({
+        tableId: this.tableId,
         type: {$ne: 'back'},
         location: 'inDeck'
-    },{
-        sort:{dIndex: -1}
-        //limit: 1
-    });
+    },{reactive: false});
+    if(this.tilesCursor.count()>0) this.showDeck();
+};
 
+JDDeckController.prototype.showDeck = function () {
+    var self = this;
     //display deck as tile back img
-    var backUrl = Tiles.findOne({tableId: tableId, type: 'back'}).backUrl;
-    self.deckController.createDeck(backUrl, function (tile) {
+    var backUrl = Tiles.findOne({tableId: self.tableId, type: 'back'},{reactive: false}).backUrl;
+    var opts = {
+        url: backUrl,
+        id: '0',
+        selectable: false
+    };
+
+    self.deckController.addNewTile(opts, function (tile) {
         //add event handler for click on deck
         var eventMap = [{
             name: 'mouseup',
             handler: self.getFromTop.bind(self)
         }];
         self.deckController.addEventHandlers(tile, eventMap);
+        self.deckLoaded = true;
+        self.deckEmpty = false;
     });
+};
+
+JDDeckController.prototype.hideDeck = function () {
+    this.deckController.remove('0');
 };
 
 JDDeckController.prototype.getFromTop = function () {
@@ -53,6 +71,16 @@ JDDeckController.prototype.shuffle = function () {
         if(err) console.log(err.reason);
     });
 };
+
+JDDeckController.prototype.checkEmpty = function () {
+    var cnt = this.tilesCursor.count();
+    if(cnt === 0) {
+        this.hideDeck();
+        this.deckEmpty = true;
+        return;
+    }
+    if (this.deckEmpty && cnt>0) this.showDeck();
+}
 
 JDDeckController.prototype.lock = function () {
     this.isLocked = true;

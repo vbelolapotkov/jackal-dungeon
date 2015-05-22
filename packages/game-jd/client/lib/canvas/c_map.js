@@ -12,8 +12,7 @@ cMap = fabric.util.createClass(fabric.Group, {
         options.originX || (options.originX = 'center');
         options.originY || (options.originY = 'center');
         this.callSuper('initialize', objects, options);
-        this.on('mouseup', this.onMouseUp);
-        this.on('object:dblclick', this.onDblClick);
+        //this.on('mouseup', this.onMouseUp);
     },
 
     _render: function(ctx) {
@@ -35,10 +34,4 @@ cMap.prototype.onMouseUp = function (options) {
             self.fire('modified', {action: 'move'});
         }
     });
-};
-
-cMap.prototype.onDblClick = function (options) {
-    console.log('dblclick');
-    console.log(this);
-    console.log(options);
 };

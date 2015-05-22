@@ -23,20 +23,22 @@ JDMapController.prototype.loadMap = function (callback) {
         var opts = {
             url:doc.imgUrl,
             id: doc.tileId,
-            mCoords: doc.mCoords,
+            dCoords: doc.dCoords,
             type: doc.type
         }
         tOptions.push(opts);
     });
     self.mapController.createMap(tOptions, function (result) {
         self.mapCreated = result;
+
+        if(result) self.setMapEventHandlers();
         callback(result);
     });
 };
 
 JDMapController.prototype.dbAddedTileOnMap = function (doc) {
     if(!this.mapCreated) return;
-    if (this.mapController.hasMapTileAt(doc.mCoords)) {
+    if (this.mapController.hasMapTileAt(doc.dCoords)) {
         return;
     }
     //todo: add animation on adding tile to table
@@ -46,14 +48,14 @@ JDMapController.prototype.dbAddedTileOnMap = function (doc) {
         angle: doc.angle,
         type: doc.type
     };
-    this.mapController.attachTile(opts,doc.mCoords);
+    this.mapController.attachTile(opts,doc.dCoords);
 };
 
 JDMapController.prototype.attachTile = function (tile, callback) {
     if(!tile || !callback) return;
     var self = this;
-    var mCoords = self.mapController.findMapCoords(tile);
-    if(!mCoords) {
+    var dCoords = self.mapController.findEmptyUnderTile(tile);
+    if(!dCoords) {
         callback(false);
         return;
     }
@@ -67,12 +69,12 @@ JDMapController.prototype.attachTile = function (tile, callback) {
         return;
     }
 
-    self.mapController.attachTile(tile, mCoords);
+    self.mapController.attachTile(tile, dCoords);
     Tiles.update(tileDoc._id, {
         $set: {
             location: 'onMap',
             lastChange: 'attachToMap',
-            mCoords: mCoords
+            dCoords: dCoords
         },
         $unset: {
             ownerId: '',
@@ -91,3 +93,17 @@ JDMapController.prototype.attachTile = function (tile, callback) {
 JDMapController.prototype.getEntranceCoords = function () {
     return this.mapController.getEntranceCoords();
 };
+
+JDMapController.prototype.setMapEventHandlers = function () {
+    var self = this;
+    var eventMap = [{
+        name: 'map:detach',
+        handler: this.handleMapModified.bind(this)
+    }];
+    this.mapController.addEventHandlers(eventMap);
+};
+
+JDMapController.prototype.handleMapModified = function (options) {
+    console.log('map: tile detached');
+    alert('x:'+options.dCoords.x+' y:'+options.dCoords.y);
+}

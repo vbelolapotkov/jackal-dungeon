@@ -10,7 +10,7 @@ cTileController.prototype.findById = function (id) {
     var objects = canvas.getObjects('cTile');
     if(!objects) return;
     var tile = _.find(objects, function (obj) {
-        return obj.tileId === id;
+        return obj.id === id;
     });
     return tile;
 };
@@ -21,24 +21,6 @@ cTileController.prototype.createContainer = function (coords) {
     this.canvas.add(this.container);
 };
 
-cTileController.prototype.createDeck = function (backUrl, callback) {
-    //eHandler - eventHandler for mouse up event on deck
-    var self = this;
-    var backOptions = {
-        url: backUrl,
-        id: 0,
-        left: self.container.getLeft(),
-        top: self.container.getTop(),
-        selectable: false
-    };
-
-    //create tile and add to canvas
-    cTile.fromURL(backOptions, function (tile) {
-        self.canvas.add(tile);
-        callback(tile);
-    });
-};
-
 cTileController.prototype.addNewTile = function (options, callback) {
     var self = this;
     if(!options.coords)
@@ -46,6 +28,7 @@ cTileController.prototype.addNewTile = function (options, callback) {
             left: self.container.getLeft(),
             top: self.container.getTop()
         };
+    if(options.selectable === undefined) options.selectable = true;
     //if relative coords supplied with reference than convert to abs
     if(options.ref) options.coords = rel2abs(options.coords, options.ref);
     var tileOpts = {
@@ -53,7 +36,8 @@ cTileController.prototype.addNewTile = function (options, callback) {
         id: options.id,
         angle: options.angle || 0,
         left: options.coords.left,
-        top: options.coords.top
+        top: options.coords.top,
+        selectable: options.selectable
     };
     cTile.fromURL(tileOpts, function (tile) {
         self.canvas.add(tile);
@@ -141,14 +125,6 @@ cTileController.prototype.getSize = function (tile) {
     return {
         width: t.getWidth(),
         height: t.getHeight()
-    }
-};
-
-cTileController.prototype.getCenterPoint = function (tile) {
-    var t = this.getTile(tile);
-    return {
-        left: Math.round(t.getLeft() + t.getWidth()/2),
-        top:  Math.round(t.getTop() + t.getHeight()/2)
     }
 };
 

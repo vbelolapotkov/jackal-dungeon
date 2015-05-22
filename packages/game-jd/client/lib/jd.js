@@ -29,6 +29,7 @@ JD.prototype.initGame = function (canvasId) {
     self.canvas.setHeight(window.innerHeight*0.9);
 
     self.deckController = new JDDeckController(self._id,self.canvas);
+    self.deckController.loadDeck();
     self.mapController = new JDMapController({
         tableId: self._id,
         canvas: self.canvas
