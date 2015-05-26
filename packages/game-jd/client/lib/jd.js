@@ -47,6 +47,11 @@ JD.prototype.initGame = function (canvasId) {
             deckController: self.deckController,
             mapController: self.mapController
         });
+        self.piratesController = new JDPiratesController({
+            tableId: self._id,
+            canvas: self.canvas,
+            mapController: self.mapController
+        });
         self.gameSync = new JDSynchronizer({
             tableId: self._id,
             deckController: self.deckController,
