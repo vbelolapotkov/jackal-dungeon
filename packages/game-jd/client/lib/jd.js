@@ -13,7 +13,7 @@ JD = function (tableId) {
         console.log('JD: Table subscription is ready');
     });
     //subscribe to data if available
-    Tracker.autorun(function (c) {
+    Tracker.autorun(function () {
         if(ms.ready() && ds.ready() && ts.ready()) {
             //all data ready
             self.dataReady.set(true);

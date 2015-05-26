@@ -52,7 +52,7 @@ JDDeckController.prototype.hideDeck = function () {
 
 JDDeckController.prototype.getFromTop = function () {
     var self = this;
-    if(self.isLocked) {
+    if(self.isTableLocked) {
         console.log('Cannot take new tile: locked');
         return;
     }
@@ -83,9 +83,9 @@ JDDeckController.prototype.checkEmpty = function () {
 }
 
 JDDeckController.prototype.lock = function () {
-    this.isLocked = true;
+    this.isTableLocked = true;
 };
 
 JDDeckController.prototype.unlock = function () {
-    this.isLocked = false;
+    this.isTableLocked = false;
 };

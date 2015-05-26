@@ -41,6 +41,10 @@ JDSynchronizer.prototype.setMapObserver = function () {
     self.mapObserver = tilesOnMap.observe({
         added: function (doc) {
             self.mapController.dbAddedTileOnMap(doc);
+        },
+        removed: function (oldDoc) {
+            self.mapController.dbRemoveTileFromMap(oldDoc)
+            //setTimeout(self.mapController.dbRemoveTileFromMap(oldDoc),3000);
         }
     });
 };

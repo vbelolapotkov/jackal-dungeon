@@ -12,17 +12,7 @@ JDTileController = function (options) {
 JDTileController.prototype.dbAddedTileOnTable = function (doc) {
     //todo: add animation for add action
     var self = this;
-    self.deckController.lock();
-    self.tileOnTableId = doc.tileId;
-    var eCoords;
-    if(doc.coords) eCoords = self.mapController.getEntranceCoords();
-    self.tileController.addNewTile({
-        url:doc.imgUrl,
-        id: doc.tileId,
-        angle: doc.angle,
-        coords: doc.coords,
-        ref: eCoords
-    }, function (tile) {
+    var setControlsOnTile = function (tile) {
         //set events on new tile
         var eventMap = [{
             name: 'modified',
@@ -33,7 +23,24 @@ JDTileController.prototype.dbAddedTileOnTable = function (doc) {
         self.tileController.addEventHandlers(tile, eventMap);
         var parent = document.getElementById('jdGameContainer');
         self.tileControlsInstance = Blaze.renderWithData(Template.JDTileControls, tile, parent);
-    });
+    };
+    self.lock();
+    self.tileOnTableId = doc.tileId;
+
+    //check if the tile already on canvas
+    var tile = self.tileController.findById(doc.tileId);
+
+    if(!tile) {
+        var eCoords;
+        if(doc.coords) eCoords = self.mapController.getEntranceCoords();
+        self.tileController.addNewTile({
+            url:doc.imgUrl,
+            id: doc.tileId,
+            angle: doc.angle,
+            coords: doc.coords,
+            ref: eCoords
+        }, setControlsOnTile);
+    } else setControlsOnTile(tile);
 };
 
 JDTileController.prototype.dbChangedTileOnTable = function (newDoc, oldDoc) {
@@ -58,7 +65,7 @@ JDTileController.prototype.dbRemovedTileFromTable = function (oldDoc) {
     Blaze.remove(self.tileControlsInstance);
     self.tileController.removeTile(self.tileOnTableId);
     self.tileOnTable = undefined;
-    self.deckController.unlock();
+    self.unlock();
 };
 
 JDTileController.prototype.handleModifiedTileOnTable = function (tile, options) {
@@ -75,8 +82,9 @@ JDTileController.prototype.handleModifiedTileOnTable = function (tile, options) 
 
 JDTileController.prototype.handleMovedTileOnTable = function (tile) {
     var self = this;
-    var eCoords = self.mapController.getEntranceCoords();
-    var coords = self.tileController.getRelCoords(tile, eCoords);
+    var coords = self.mapController.getRelCoords(tile);
+    //var eCoords = self.mapController.getEntranceCoords();
+    //var coords = self.tileController.getRelCoords(tile, eCoords);
     var tileId = self.tileController.getId(tile);
     var tileDoc = Tiles.findOne({tableId: self.tableId, location:'onTable', tileId:tileId});
 
@@ -110,11 +118,10 @@ JDTileController.prototype.handleRotatedTileOnTable = function (tile) {
 };
 
 JDTileController.prototype.attachTileToMap = function (tile) {
-    //todo: change tile location and remove controls
     var self = this;
     self.mapController.attachTile(tile, function (success) {
         if(!success) return;
-        self.deckController.unlock();
+        self.unlock();
         Blaze.remove(self.tileControlsInstance);
     });
 };
@@ -144,4 +151,16 @@ JDTileController.prototype.returnTileToDeck = function (tile) {
         if (err) console.log(err.reason);
         else self.deckController.shuffle();
     });
+};
+
+JDTileController.prototype.lock = function() {
+    //notify deck and map about lock
+    this.deckController.lock();
+    this.mapController.lock();
+};
+
+JDTileController.prototype.unlock = function() {
+    //notify deck and map about unlock
+    this.deckController.unlock();
+    this.mapController.unlock();
 };

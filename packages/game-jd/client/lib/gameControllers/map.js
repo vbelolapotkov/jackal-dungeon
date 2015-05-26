@@ -13,24 +13,19 @@ JDMapController = function (options) {
 
 JDMapController.prototype.loadMap = function (callback) {
     var self = this;
-    var mapTiles = Tiles.find({
+    var entranceDoc = Tiles.findOne({
         tableId: self.tableId,
-        location: 'onMap'
-    }, {reactive:false}).fetch();
+        location: 'onMap',
+        type: 'entrance'
+    }, {reactive:false});
 
-    var tOptions = [];
-    _.each(mapTiles, function (doc) {
-        var opts = {
-            url:doc.imgUrl,
-            id: doc.tileId,
-            dCoords: doc.dCoords,
-            type: doc.type
+    var entranceOpts = {
+            url:entranceDoc.imgUrl,
+            id: entranceDoc.tileId,
+            type: entranceDoc.type
         }
-        tOptions.push(opts);
-    });
-    self.mapController.createMap(tOptions, function (result) {
+    self.mapController.createMap(entranceOpts, function (result) {
         self.mapCreated = result;
-
         if(result) self.setMapEventHandlers();
         callback(result);
     });
@@ -49,6 +44,12 @@ JDMapController.prototype.dbAddedTileOnMap = function (doc) {
         type: doc.type
     };
     this.mapController.attachTile(opts,doc.dCoords);
+};
+
+JDMapController.prototype.dbRemoveTileFromMap = function (doc) {
+    //check if already detached
+    if(!this.mapController.hasMapTileAt(doc.dCoords)) return;
+    this.mapController.detachTile(doc.dCoords);
 };
 
 JDMapController.prototype.attachTile = function (tile, callback) {
@@ -94,16 +95,75 @@ JDMapController.prototype.getEntranceCoords = function () {
     return this.mapController.getEntranceCoords();
 };
 
+JDMapController.prototype.getRelCoords = function (tile) {
+    return this.mapController.getRelCoords(tile);
+}
+
 JDMapController.prototype.setMapEventHandlers = function () {
     var self = this;
     var eventMap = [{
         name: 'map:detach',
-        handler: this.handleMapModified.bind(this)
+        handler: this.handleTileDetach.bind(this)
     }];
     this.mapController.addEventHandlers(eventMap);
 };
+/*
+* handle detach tile event fired by cMapController
+* @options - dCoords of detached tile
+* */
+JDMapController.prototype.handleTileDetach = function (options) {
+    //1. Check if it is allowed to detach tile from map
+    if(this.isTableLocked()) {
+        console.log('Cannot detach tile: table is locked');
+        return;
+    }
+    if(options.dCoords.x == 0 && options.dCoords.y == 0) {
+        console.log('Cannot detach entrance');
+        return;
+    }
+    //2. Detach tile from map and leave on table
+    var tileId = this.mapController.detachTile(options.dCoords, true);
+    if(tileId < 0) {
+        console.log('Failed to detach tile from canvas');
+        return;
+    }
 
-JDMapController.prototype.handleMapModified = function (options) {
-    console.log('map: tile detached');
-    alert('x:'+options.dCoords.x+' y:'+options.dCoords.y);
+    //3. Find tile in DB
+    var tileDoc = Tiles.findOne({
+        tableId: this.tableId,
+        location: 'onMap',
+        dCoords: options.dCoords
+    });
+    if(!tileDoc || tileDoc.tileId!== tileId) {
+        console.log('DB tile mismatch on detach from canvas');
+        return;
+    }
+    //4. Update tile data in DB
+    var relCoords = this.mapController.getRelCoords(tileId);
+    Tiles.update(tileDoc._id, {
+        $set: {
+            location:'onTable',
+            lastChange:'detachFromMap',
+            coords: relCoords
+            //ownerId:
+        },
+        $unset: {
+            dCoords:''
+        }
+    }, function (err) {
+        if(err) console.log(err.reason);
+    })
+};
+
+
+JDMapController.prototype.lock = function () {
+    this.tableLocked = true;
 }
+
+JDMapController.prototype.unlock = function () {
+    this.tableLocked = false;
+}
+
+JDMapController.prototype.isTableLocked = function () {
+    return this.tableLocked;
+};

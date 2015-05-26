@@ -8,21 +8,21 @@ cMapController = function (options) {
 * @tiles - array of tile options to create new tiles
 * @callback - callback function with one bool parameter - the result of map creation
 * */
-cMapController.prototype.createMap = function (tiles, callback) {
+cMapController.prototype.createMap = function (entrance, callback) {
     var self = this;
     var coords = {
         left: Math.round(self.canvas.getWidth()/20)*10,
         top: Math.round(self.canvas.getHeight()/20)*10
     };
     //entrance tile should be first in the array
-    if(tiles[0].type !== 'entrance') {
+    if(entrance.type !== 'entrance') {
         callback(false);
         return;
     }
 
     cTile.fromURL({
-        url: tiles[0].url,
-        id: tiles[0].id
+        url: entrance.url,
+        id: entrance.id
     }, function (entrance) {
         self.setMapStyle(entrance);
         self.setDungeonCoords(entrance, {x:0, y:0});
@@ -35,9 +35,6 @@ cMapController.prototype.createMap = function (tiles, callback) {
             {x: 0, y:-1},
         ]);
         self.canvas.renderAll();
-        _.each(tiles.slice(1), function (t) {
-            self.attachTile(t, t.dCoords);
-        });
 
         self.map.on('object:dblclick', handleMapDblClick.bind(self));
         callback(true);
@@ -78,6 +75,15 @@ cMapController.prototype.getEntranceCoords = function () {
     var eCoords = this.tileController.getCoords(e);
     return this.coordsMap2Canvas(eCoords);
 };
+
+/*
+* @return - tile coords relative to map entrance
+* @tile - tile object or id
+* */
+cMapController.prototype.getRelCoords = function (tile) {
+    var eCoords = this.getEntranceCoords();
+    return this.tileController.getRelCoords(tile, eCoords);
+}
 
 /*
 * @return - return tile of specified type with specific dCoords
@@ -126,6 +132,16 @@ cMapController.prototype.setDungeonCoords  = function (tile, dCoords) {
     this.tileController.set(tile, {
         dX: dCoords.x,
         dY: dCoords.y
+    });
+};
+
+/*
+ * reset tile coords (x,y) of tile object
+ * */
+cMapController.prototype.resetDungeonCoords  = function (tile) {
+    this.tileController.set(tile, {
+        dX: undefined,
+        dY: undefined
     });
 };
 
@@ -194,7 +210,7 @@ cMapController.prototype.attachTile = function (tile, dCoords) {
     var updateCanvasOnAttach = function (t, mC) {
         self.map.addWithUpdate(t);
         self.removeEmptyTile(mC);
-        self.addEmptyTiles(self.getEmptyNeighbors(mC));
+        self.addEmptyTiles(self.getNeighborsWithoutTiles(mC));
         self.map.setCoords();
         self.canvas.renderAll();
     };
@@ -233,15 +249,84 @@ cMapController.prototype.attachTile = function (tile, dCoords) {
     }
 };
 
-cMapController.prototype.detachTile = function (tile) {
+/*
+* @return - boolean result of operation
+* @dCoords - dungeon coords of tile to be detached
+* @leaveOnTable - (optional) set true if the detached tile has to be placed on table
+* */
+cMapController.prototype.detachTile = function (dCoords, leaveOnTable) {
+    //1. Find tile object on map
+    var tile = this.getTileAt(dCoords, 'cTile');
+    if(!tile) return -1;
+    //2. Remove tile from map
+    this.map.removeWithUpdate(tile);
 
+    //3. Remove add empty tiles
+    //add empty tile under removed tile
+    var emptyNeighboursCoords = this.getEmptyNeighborsDCoords(dCoords);
+    var tilesToRemoveCoords = _.filter(emptyNeighboursCoords,
+        function (coords) {
+            return !this.hasTileNeighbour(coords);
+        },
+        this);
+    if(tilesToRemoveCoords.length > 0)
+        _.each(tilesToRemoveCoords, function (dCoords) {
+            this.removeEmptyTile(dCoords);
+        }, this);
+    this.addEmptyTiles(dCoords);
+
+
+    if(leaveOnTable) {
+        this.resetDungeonCoords(tile);
+        this.tileController.setStyle(tile);
+        this.canvas.add(tile);
+    }
+    this.canvas.renderAll();
+    return this.tileController.getId(tile);
+};
+
+/*
+ * @return - array of dCoords of emptyTiles around the reference
+ * @dCoords - dCoords of the reference point
+* */
+cMapController.prototype.getEmptyNeighborsDCoords = function (dCoords) {
+    var candidates = [
+        {x: dCoords.x + 1, y: dCoords.y},
+        {x: dCoords.x - 1, y: dCoords.y},
+        {x: dCoords.x    , y: dCoords.y + 1},
+        {x: dCoords.x    , y: dCoords.y - 1},
+    ];
+    var result = [];
+    var self = this;
+    _.each(candidates, function (c) {
+        if(this.hasTileAt(c, 'emptyTile'))
+            result.push(c);
+    }, this);
+    return result;
+}
+
+
+/*
+* @return - boolean. True if any of the tile neighbors aren't empty
+* @dCoords - coords of tile on map
+* */
+cMapController.prototype.hasTileNeighbour = function(dCoords) {
+    var candidates = [
+        {x: dCoords.x + 1, y: dCoords.y},
+        {x: dCoords.x - 1, y: dCoords.y},
+        {x: dCoords.x    , y: dCoords.y + 1},
+        {x: dCoords.x    , y: dCoords.y - 1},
+    ];
+    return Boolean(_.find(candidates, function (c) {
+        return this.hasTileAt(c, 'cTile');
+    }, this));
 };
 
 /*
 * @return - array of dCoords {x,y} without any tiles
 * @dCoords - coordinates of center
 * */
-cMapController.prototype.getEmptyNeighbors = function (dCoords) {
+cMapController.prototype.getNeighborsWithoutTiles = function (dCoords) {
     var candidates = [
         {x: dCoords.x + 1, y: dCoords.y},
         {x: dCoords.x - 1, y: dCoords.y},

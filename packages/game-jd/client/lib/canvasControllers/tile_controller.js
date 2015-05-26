@@ -158,7 +158,15 @@ cTileController.prototype.isTile = function (tile) {
     //checks if the object is tile
     if(!tile) return false;
     return tile.canvas && tile.type === 'cTile';
-}
+};
+
+cTileController.prototype.setStyle = function (tile) {
+    var t = this.getTile(tile);
+    t.set({
+        hasBorders: true,
+        active: true
+    });
+};
 
 function rel2abs (rel, ref) {
     return {
