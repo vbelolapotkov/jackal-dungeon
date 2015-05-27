@@ -24,10 +24,11 @@ JDMapController.prototype.loadMap = function (callback) {
             id: entranceDoc.tileId,
             type: entranceDoc.type
         }
-    self.mapController.createMap(entranceOpts, function (result) {
-        self.mapCreated = result;
-        if(result) self.setMapEventHandlers();
-        callback(result);
+    self.mapController.createMap(entranceOpts, function (map) {
+        var success = Boolean(map)
+        self.mapCreated = success;
+        if(success) self.setMapEventHandlers(map);
+        callback(success);
     });
 };
 
@@ -99,13 +100,8 @@ JDMapController.prototype.getRelCoords = function (tile) {
     return this.mapController.getRelCoords(tile);
 }
 
-JDMapController.prototype.setMapEventHandlers = function () {
-    var self = this;
-    var eventMap = [{
-        name: 'map:detach',
-        handler: this.handleTileDetach.bind(this)
-    }];
-    this.mapController.addEventHandlers(eventMap);
+JDMapController.prototype.setMapEventHandlers = function (map) {
+    map.on('map:detach', this.handleTileDetach.bind(this));
 };
 /*
 * handle detach tile event fired by cMapController

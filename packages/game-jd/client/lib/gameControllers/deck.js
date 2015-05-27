@@ -36,11 +36,7 @@ JDDeckController.prototype.showDeck = function () {
 
     self.deckController.addNewTile(opts, function (tile) {
         //add event handler for click on deck
-        var eventMap = [{
-            name: 'mouseup',
-            handler: self.getFromTop.bind(self)
-        }];
-        self.deckController.addEventHandlers(tile, eventMap);
+        tile.on('mouseup', self.getFromTop.bind(self));
         self.deckLoaded = true;
         self.deckEmpty = false;
     });

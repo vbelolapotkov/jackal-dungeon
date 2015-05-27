@@ -95,7 +95,9 @@ cTile.prototype.setCoordsWithUpdate = function (coords) {
 
 cTile.prototype.setFreeStyle = function () {
     this.set({
-        hasBorders: true
+        hasBorders: true,
+        dX: udnefined,
+        dY: undefined
     });
 };
 
@@ -103,6 +105,20 @@ cTile.prototype.setMapStyle = function () {
     this.set({
         hasBorders: false
     });
+}
+
+cTile.prototype.setDungeonCoords = function(dCoords) {
+    this.set({
+        dX:dCoords.x,
+        dY:dCoords.y
+    });
+}
+
+cTile.prototype.getDungeonCoords = function () {
+    return {
+        x: this.dX,
+        y: this.dY
+    }
 }
 
 cTile.async = true;
@@ -126,3 +142,22 @@ EmptyTile = fabric.util.createClass(fabric.Rect, {
         this.callSuper('initialize', options);
     }
 });
+
+EmptyTile.prototype.setDungeonCoords = function(dCoords) {
+    this.set({
+        dX:dCoords.x,
+        dY:dCoords.y
+    });
+};
+
+EmptyTile.prototype.highlight = function () {
+    this.set({
+        fill: '#999'
+    });
+};
+
+EmptyTile.prototype.resetHighlight = function () {
+    this.set({
+        fill: '#fff'
+    });
+};
