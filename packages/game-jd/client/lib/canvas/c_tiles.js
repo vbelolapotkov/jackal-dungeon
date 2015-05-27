@@ -30,7 +30,7 @@ cTile = fabric.util.createClass(fabric.Image, {
 
     toObject: function() {
         return fabric.util.object.extend(this.callSuper('toObject'), {
-            tileId: this.get('tileId')
+            id: this.get('id')
         });
     },
 
@@ -55,7 +55,7 @@ cTile.prototype.onMouseUp = function (options) {
     });
 };
 
-cTile.prototype.onTileSelect = function (options) {
+cTile.prototype.onTileSelect = function () {
     this.bringToFront();
 };
 
@@ -66,6 +66,44 @@ cTile.fromURL = function (options, callback) {
         callback && callback(new cTile(options, img))
     });
 };
+
+cTile.prototype.getId = function () {
+    return this.id;
+};
+
+cTile.prototype.getCoords = function () {
+    return {
+        left: this.left,
+        top: this.top
+    }
+};
+
+cTile.prototype.getSize = function () {
+    return {
+        width: this.width,
+        height: this.height
+    }
+};
+
+cTile.prototype.setCoordsWithUpdate = function (coords) {
+    this.set({
+        left:coords.left,
+        top: coords.top
+    });
+    this.setCoords();
+};
+
+cTile.prototype.setFreeStyle = function () {
+    this.set({
+        hasBorders: true
+    });
+};
+
+cTile.prototype.setMapStyle = function () {
+    this.set({
+        hasBorders: false
+    });
+}
 
 cTile.async = true;
 

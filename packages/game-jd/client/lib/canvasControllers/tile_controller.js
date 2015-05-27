@@ -5,6 +5,10 @@ cTileController = function (canvas) {
     this.canvas = canvas;
 };
 
+/*
+* @return - cTile. Tile object on canvas. Return undefined if not found.
+* @id - id of the tile
+* */
 cTileController.prototype.findById = function (id) {
     var canvas = this.canvas;
     var objects = canvas.getObjects('cTile');
@@ -15,12 +19,30 @@ cTileController.prototype.findById = function (id) {
     return tile;
 };
 
+
+/*
+* @side_effect - creates emptyTile container on canvas
+* @coords - canvas coords of new container
+* */
 cTileController.prototype.createContainer = function (coords) {
     //coordinates of tile center
     this.container = new EmptyTile(coords);
     this.canvas.add(this.container);
 };
 
+
+/*
+* @side_effect - asynchronously creates new tile and adds it to canvas.
+* Invokes callback, when tile added to canvas.
+* @options - tile options.
+* @options.coords - canvas coords
+* @options.ref - (optional) canvas coords of reference point. If specified coords a relative.
+* @options.url - tile img url
+* @options.id - tileId
+* @options.angle - tile orientation. Default = 0 degrees
+* @options.selectable - (optional) boolean.
+* @callback - (optional) callback function. Accepts created tile as a parameter.
+* */
 cTileController.prototype.addNewTile = function (options, callback) {
     var self = this;
     if(!options.coords)
@@ -45,21 +67,10 @@ cTileController.prototype.addNewTile = function (options, callback) {
     });
 };
 
-cTileController.prototype.removeTile = function (tile) {
-    var t = this.getTile(tile);
-    this.canvas.remove(t);
-};
-
-cTileController.prototype.addEventHandlers = function (tile,eventMap) {
-    //add event handlers for tile
-    //tile - id or tile object
-    var t = this.getTile(tile);
-    //set event maps on t
-    _.forEach(eventMap, function (event) {
-        t.on(event.name, event.handler);
-    });
-};
-
+/*
+* @return - cTile. Tile object if tile is id, else do nothing
+* @tile - id or tile object
+* */
 cTileController.prototype.getTile = function (tile) {
     //todo: add more checking on tile
     if (typeof tile === 'string') {
@@ -68,6 +79,12 @@ cTileController.prototype.getTile = function (tile) {
     else return tile;
 };
 
+/*
+* @side_effect - animates tile movement on canvas
+* @tile - tileId or cTile object
+* @newCoords - tile coords on canvas
+* @callback - (optional) callback function, on animation complete
+* */
 cTileController.prototype.move = function (tile, newCoords, callback) {
     var self = this;
     var t = self.getTile(tile);
@@ -77,17 +94,29 @@ cTileController.prototype.move = function (tile, newCoords, callback) {
     t.animate(newCoords, {
         onChange: self.canvas.renderAll.bind(self.canvas),
         onComplete: function () {
-            if(callback) callback(t);
+            callback && callback(t);
         }
     })
 };
 
+/*
+* @side_effect - the same as move but with relative coords
+* @ref - reference point
+* @rel - relative coords
+* @callback - (optional) callback on animate complete
+* */
 cTileController.prototype.moveRel = function (tile, rel, ref, callback) {
     //ref - reference point
     var newCoords = rel2abs(rel, ref);
     this.move(tile,newCoords,callback);
-}
+};
 
+/*
+ * @side_effect - animates tile rotation on canvas
+ * @tile - tileId or cTile object
+ * @angle - new angle
+ * @callback - (optional) callback function, on animation complete
+ * */
 cTileController.prototype.rotate = function (tile, angle, callback) {
     var self = this;
     var t = self.getTile(tile);
@@ -102,56 +131,15 @@ cTileController.prototype.rotate = function (tile, angle, callback) {
     });
 };
 
-cTileController.prototype.getId = function (tile) {
-    return tile.id;
-};
-
-cTileController.prototype.getCoords = function (tile) {
-    var t = this.getTile(tile);
-    return {
-        left: t.getLeft(),
-        top: t.getTop()
-    }
-};
-
+/*
+* @return - tile relative coords
+* @tile - tile object or Id
+* @ref - reference point
+* */
 cTileController.prototype.getRelCoords = function (tile, ref) {
     //ref - reference point for relative coords
-    var abs = this.getCoords(tile);
-    return abs2rel(abs, ref);
-};
-
-cTileController.prototype.getSize = function (tile) {
     var t = this.getTile(tile);
-    return {
-        width: t.getWidth(),
-        height: t.getHeight()
-    }
-};
-
-cTileController.prototype.getAngle = function (tile) {
-    var t = this.getTile(tile);
-    return t.getAngle();
-};
-
-cTileController.prototype.fireEvent = function (tile, event, options) {
-    var t = this.getTile(tile);
-    t.fire(event, options);
-};
-
-cTileController.prototype.remove = function (tile) {
-    var t=this.getTile(tile);
-    t.remove();
-};
-
-cTileController.prototype.set = function (tile, options) {
-    var t=this.getTile(tile);
-    t.set(options);
-};
-
-cTileController.prototype.setCoordsWithUpdate = function (tile, options) {
-    var t=this.getTile(tile);
-    t.set(options);
-    t.setCoords();
+    return abs2rel(t.getCoords(), ref);
 };
 
 cTileController.prototype.isTile = function (tile) {
@@ -160,14 +148,11 @@ cTileController.prototype.isTile = function (tile) {
     return tile.canvas && tile.type === 'cTile';
 };
 
-cTileController.prototype.setStyle = function (tile) {
-    var t = this.getTile(tile);
-    t.set({
-        hasBorders: true,
-        active: true
-    });
-};
-
+/*
+* @return - absolute coords
+* @rel - relative coords
+* @ref - reference point
+* */
 function rel2abs (rel, ref) {
     return {
         left: rel.left + ref.left,
@@ -175,6 +160,11 @@ function rel2abs (rel, ref) {
     };
 };
 
+/*
+* @return - relative coords
+* @abs - absolute coords
+* @ref - reference point
+* */
 function abs2rel (abs, ref) {
     return {
         left: abs.left - ref.left,
