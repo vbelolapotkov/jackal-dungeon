@@ -23,41 +23,13 @@ JD = function (tableId) {
 
 JD.prototype.initGame = function (canvasId) {
     console.log('JD: Initializing Game ...');
-    var self = this;
-    self.canvas = new CanvasExt(canvasId);
-    self.canvas.setWidth(window.innerWidth*0.9);
-    self.canvas.setHeight(window.innerHeight*0.9);
-
-    self.deckController = new JDDeckController(self._id,self.canvas);
-    self.deckController.loadDeck();
-    self.mapController = new JDMapController({
-        tableId: self._id,
-        canvas: self.canvas
+    var canvas = new CanvasExt(canvasId);
+    canvas.setWidth(window.innerWidth*0.9);
+    canvas.setHeight(window.innerHeight*0.9);
+    this.gameController = new JDGameController({
+        tableId: this._id,
+        canvas: canvas
     });
-
-    //load map first and than load other resources
-    self.mapController.loadMap(function (result) {
-        if(!result) {
-            console.log('Failed to load map');
-            return;
-        }
-        self.tileController = new JDTileController({
-            tableId: self._id,
-            canvas: self.canvas,
-            deckController: self.deckController,
-            mapController: self.mapController
-        });
-        self.piratesController = new JDPiratesController({
-            tableId: self._id,
-            canvas: self.canvas,
-            mapController: self.mapController
-        });
-        self.gameSync = new JDSynchronizer({
-            tableId: self._id,
-            deckController: self.deckController,
-            tileController: self.tileController,
-            mapController: self.mapController
-        });
-        console.log('JD: Game Initialized');
-    })
+    this.gameController.loadGame();
+    console.log('JD: Game Initialized');
 };

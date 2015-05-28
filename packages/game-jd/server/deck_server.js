@@ -1,9 +1,9 @@
 /**
  * Created by vbelolapotkov on 06/05/15.
  */
-JDDeckController = {};
+DeckController = {};
 
-JDDeckController.init = function (tiles, options) {
+DeckController.init = function (tiles, options) {
     if(!options) return;
     var tableId = options.tableId;
     var backUrl = options.backUrl;
@@ -28,10 +28,10 @@ JDDeckController.init = function (tiles, options) {
             location: 'inDeck'
         });
     });
-    JDDeckController.shuffle(tableId);
+    DeckController.shuffle(tableId);
 };
 
-JDDeckController.shuffle = function (tableId) {
+DeckController.shuffle = function (tableId) {
     var cursor = Tiles.find({tableId:tableId,location: 'inDeck', type: {$ne: 'back'}});
     var cnt = cursor.count();
     var shuffledIndex = _.shuffle(_.range(cnt));
@@ -64,6 +64,6 @@ Meteor.methods({
     },
     'DeckShuffle': function (tableId) {
         //todo: add check if action allowed to current user
-        JDDeckController.shuffle(tableId);
+        DeckController.shuffle(tableId);
     }
 });

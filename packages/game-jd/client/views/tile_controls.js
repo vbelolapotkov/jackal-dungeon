@@ -8,20 +8,15 @@ Template.JDTileControls.onRendered(function () {
     self.controlsContainer = this.$('#jdTileControls');
     self.positionControls = position.bind(self);
     self.positionControls(tile);
-    var eventMap = [{
-        name: 'moving',
-        handler: function () {
-            self.positionControls(this);
-        }
-    }, {
-        name: 'modified',
-        handler: function (options) {
-            //update position when moved
-            if(!options.action || options.action !== 'move')return;
-            self.positionControls(this);
-        }
-    }];
-    self.tileController.addEventHandlers(tile,eventMap);
+
+    tile.on('moving', function () {
+        self.positionControls(this);
+    });
+    tile.on('modified', function (options) {
+        //update position when moved
+        if(!options.action || options.action !== 'move')return;
+        self.positionControls(this);
+    });
 });
 
 Template.JDTileControls.events({
@@ -33,19 +28,19 @@ Template.JDTileControls.events({
     },
     'click button[name="appendToMap"]': function (e) {
         var tile = this;
-        Template.instance().tileController.fireEvent(tile, 'modified', {action:'appendToMap'});
+        tile.fire('modified', {action:'appendToMap'});
     },
     'click button[name="returnToDeck"]': function (e) {
         var tile = this;
-        Template.instance().tileController.fireEvent(tile, 'modified', {action: 'returnToDeck'});
+        tile.fire('modified', {action: 'returnToDeck'});
     }
 });
 
 function position (tile) {
     //this - template instance
     var self = this;
-    var coords = self.tileController.getCoords(tile);
-    var size = self.tileController.getSize(tile);
+    var coords = tile.getCoords();
+    var size = tile.getSize();
     var tileLeft = coords.left - size.width/2;
     var tileBottom = coords.top + size.height/2;
 
@@ -57,7 +52,7 @@ function animateRotation (button,tileController, tile, angle) {
     button.disabled='disabled';
     tileController.rotate(tile,angle, function (tile) {
         button.disabled=null;
-        tileController.fireEvent(tile,'modified', {action: 'rotate'});
+        tile.fire('modified', {action: 'rotate'});
     });
 }
 

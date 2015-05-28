@@ -1,7 +1,7 @@
-cMapController = function (options) {
-    this.canvas = options.canvas;
+cMapController = function (canvas) {
+    this.canvas = canvas;
     //try to find map if it exists on canvas
-    this.map = this.findMap(options.canvas);
+    this.map = this.findMap();
 };
 
 
@@ -161,7 +161,7 @@ cMapController.prototype.attachTile = function (tile, dCoords) {
         t.setDungeonCoords(dCoords);
         self.map.addWithUpdate(t);
         self.removeEmptyTile(dCoords);
-        self.addEmptyTiles(self.getNeighborsWithoutTiles(dCoords));
+        self.addEmptyTiles(self.map.getNeighborsWithoutTiles(dCoords));
         self.map.setCoords();
         self.canvas.renderAll();
     };
@@ -198,27 +198,26 @@ cMapController.prototype.attachTile = function (tile, dCoords) {
 };
 
 /*
-* @return - boolean result of operation
+* @return - detached tile object or undefined
 * @dCoords - dungeon coords of tile to be detached
-* @leaveOnTable - (optional) set true if the detached tile has to be placed on table
 * */
-cMapController.prototype.detachTile = function (dCoords, leaveOnTable) {
+cMapController.prototype.detachTile = function (dCoords) {
     if(!this.map) {
         this.logNotFound('detachTile');
         return;
     };
     //1. Find tile object on map
     var tile = this.map.getTileAt(dCoords, 'cTile');
-    if(!tile) return -1;
+    if(!tile) return;
     //2. Remove tile from map
     this.map.removeWithUpdate(tile);
 
     //3. Remove add empty tiles
     //add empty tile under removed tile
-    var emptyNeighboursCoords = this.getEmptyNeighborsDCoords(dCoords);
+    var emptyNeighboursCoords = this.map.getEmptyNeighborsDCoords(dCoords);
     var tilesToRemoveCoords = _.filter(emptyNeighboursCoords,
         function (coords) {
-            return !this.hasTileNeighbour(coords);
+            return !this.map.hasTileNeighbour(coords);
         },
         this);
     if(tilesToRemoveCoords.length > 0)
@@ -227,13 +226,9 @@ cMapController.prototype.detachTile = function (dCoords, leaveOnTable) {
         }, this);
     this.addEmptyTiles(dCoords);
 
-
-    if(leaveOnTable) {
-        tile.setFreeStyle();
-        this.canvas.add(tile);
-    }
+    //4. Render changes
     this.canvas.renderAll();
-    return this.tileController.getId(tile);
+    return tile;
 };
 
 /*
@@ -357,7 +352,7 @@ function handleMapDblClick (options) {
         top: options.e.offsetY
     };
     var dCoords = this.findDungeonCoords(cCoords);
-    if(!this.hasMapTileAt(dCoords))return;
+    if(!this.map.hasMapTileAt(dCoords))return;
     this.map.fire('map:detach', {
         action: 'detach tile',
         dCoords: dCoords

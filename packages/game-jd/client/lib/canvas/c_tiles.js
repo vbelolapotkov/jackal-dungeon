@@ -34,8 +34,9 @@ cTile = fabric.util.createClass(fabric.Image, {
         });
     },
 
-    _render: function(ctx) {
-        this.callSuper('_render', ctx);
+    remove: function () {
+        if(this.controlsInstance)this.hideControls();
+        this.callSuper('remove');
     }
 });
 
@@ -96,7 +97,7 @@ cTile.prototype.setCoordsWithUpdate = function (coords) {
 cTile.prototype.setFreeStyle = function () {
     this.set({
         hasBorders: true,
-        dX: udnefined,
+        dX: undefined,
         dY: undefined
     });
 };
@@ -105,21 +106,32 @@ cTile.prototype.setMapStyle = function () {
     this.set({
         hasBorders: false
     });
-}
+};
 
 cTile.prototype.setDungeonCoords = function(dCoords) {
     this.set({
         dX:dCoords.x,
         dY:dCoords.y
     });
-}
+};
 
 cTile.prototype.getDungeonCoords = function () {
     return {
         x: this.dX,
         y: this.dY
     }
-}
+};
+
+cTile.prototype.showControls = function () {
+    var parent = document.getElementById('jdGameContainer');
+    this.controlsInstance = Blaze.renderWithData(Template.JDTileControls, this, parent);
+
+};
+
+cTile.prototype.hideControls = function () {
+    if(!this.controlsInstance) return;
+    Blaze.remove(this.controlsInstance);
+};
 
 cTile.async = true;
 
@@ -143,12 +155,26 @@ EmptyTile = fabric.util.createClass(fabric.Rect, {
     }
 });
 
+EmptyTile.prototype.getCoords = function () {
+    return {
+        left: this.left,
+        top: this.top
+    }
+};
+
 EmptyTile.prototype.setDungeonCoords = function(dCoords) {
     this.set({
         dX:dCoords.x,
         dY:dCoords.y
     });
 };
+
+EmptyTile.prototype.getDungeonCoords = function () {
+    return {
+        x: this.dX,
+        y: this.dY
+    }
+}
 
 EmptyTile.prototype.highlight = function () {
     this.set({

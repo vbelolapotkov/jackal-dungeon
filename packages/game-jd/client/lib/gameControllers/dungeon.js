@@ -2,23 +2,25 @@
  * Created by vbelolapotkov on 04/05/15.
  */
 //object representing game map
-JDMapController = function (options) {
-    var self = this;
-    self.tableId = options.tableId;
-    self.mapController = new cMapController({
-        canvas: options.canvas
-    });
-    self.mapCreated = false;
+DungeonController = function (options) {
+    this.tableId = options.tableId;
+    this.canvas = options.canvas;
+    this.mapController = new cMapController(options.canvas);
+    this.gameController = options.gameController;
+    this.mapCreated = false;
 };
 
-JDMapController.prototype.loadMap = function (callback) {
+/*
+* @side_effect - loads map with entrance tile
+* @callback - callback called when map is loaded. Boolean result passed to callback.
+* */
+DungeonController.prototype.loadMap = function (callback) {
     var self = this;
     var entranceDoc = Tiles.findOne({
         tableId: self.tableId,
         location: 'onMap',
         type: 'entrance'
     }, {reactive:false});
-
     var entranceOpts = {
             url:entranceDoc.imgUrl,
             id: entranceDoc.tileId,
@@ -28,13 +30,32 @@ JDMapController.prototype.loadMap = function (callback) {
         var success = Boolean(map)
         self.mapCreated = success;
         if(success) self.setMapEventHandlers(map);
+        self.setMapObserver();
         callback(success);
     });
 };
 
-JDMapController.prototype.dbAddedTileOnMap = function (doc) {
+/*
+* @side_effect - sets observer for tiles on map
+* */
+DungeonController.prototype.setMapObserver = function () {
+    var tilesOnMap = Tiles.find({
+        tableId: this.tableId,
+        location: 'onMap'
+    });
+    this.mapObserver = tilesOnMap.observe({
+        added: this.dbAddedTileOnMap.bind(this),
+        removed: this.dbRemoveTileFromMap.bind(this)
+    });
+};
+
+/*
+* @side_effect - attaches tile to map when it is added to map
+* @doc - db doc of new tile
+* */
+DungeonController.prototype.dbAddedTileOnMap = function (doc) {
     if(!this.mapCreated) return;
-    if (this.mapController.hasMapTileAt(doc.dCoords)) {
+    if(this.mapController.map.hasMapTileAt(doc.dCoords)) {
         return;
     }
     //todo: add animation on adding tile to table
@@ -47,69 +68,29 @@ JDMapController.prototype.dbAddedTileOnMap = function (doc) {
     this.mapController.attachTile(opts,doc.dCoords);
 };
 
-JDMapController.prototype.dbRemoveTileFromMap = function (doc) {
+/*
+ * @side_effect - detaches tile from map when it is removed from db
+ * @doc - db doc of removed tile
+ * */
+DungeonController.prototype.dbRemoveTileFromMap = function (doc) {
     //check if already detached
-    if(!this.mapController.hasMapTileAt(doc.dCoords)) return;
+    if(!this.mapController.map.hasMapTileAt(doc.dCoords)) return;
     this.mapController.detachTile(doc.dCoords);
 };
 
-JDMapController.prototype.attachTile = function (tile, callback) {
-    if(!tile || !callback) return;
-    var self = this;
-    var dCoords = self.mapController.findEmptyUnderTile(tile);
-    if(!dCoords) {
-        callback(false);
-        return;
-    }
-
-    var tileDoc = Tiles.findOne({
-        tableId: self.tableId,
-        location: 'onTable',
-        tileId: self.mapController.getTileId(tile)});
-    if(!tileDoc || !tileDoc._id) {
-        callback(false)
-        return;
-    }
-
-    self.mapController.attachTile(tile, dCoords);
-    Tiles.update(tileDoc._id, {
-        $set: {
-            location: 'onMap',
-            lastChange: 'attachToMap',
-            dCoords: dCoords
-        },
-        $unset: {
-            ownerId: '',
-            coords: ''
-        }
-    }, function (err) {
-        if(err) {
-            console.log(err.reason);
-            callback(false);
-            return;
-        }
-        callback(true);
-    });
-};
-
-JDMapController.prototype.getEntranceCoords = function () {
-    return this.mapController.getEntranceCoords();
-};
-
-JDMapController.prototype.getRelCoords = function (tile) {
-    return this.mapController.getRelCoords(tile);
-}
-
-JDMapController.prototype.setMapEventHandlers = function (map) {
+/*
+* @side_effect - registers map event handlers
+* */
+DungeonController.prototype.setMapEventHandlers = function (map) {
     map.on('map:detach', this.handleTileDetach.bind(this));
 };
 /*
 * handle detach tile event fired by cMapController
 * @options - dCoords of detached tile
 * */
-JDMapController.prototype.handleTileDetach = function (options) {
+DungeonController.prototype.handleTileDetach = function (options) {
     //1. Check if it is allowed to detach tile from map
-    if(this.isTableLocked()) {
+    if(this.gameController.isTableLocked()) {
         console.log('Cannot detach tile: table is locked');
         return;
     }
@@ -118,13 +99,20 @@ JDMapController.prototype.handleTileDetach = function (options) {
         return;
     }
     //2. Detach tile from map and leave on table
-    var tileId = this.mapController.detachTile(options.dCoords, true);
-    if(tileId < 0) {
+    var tile = this.mapController.detachTile(options.dCoords, true);
+    if(!tile) {
         console.log('Failed to detach tile from canvas');
         return;
     }
 
-    //3. Find tile in DB
+    //3. Attach tile to table
+    tile.setFreeStyle();
+    this.canvas.add(tile);
+    this.canvas.renderAll();
+    tile.showControls();
+
+    //4. Find tile in DB
+    var tileId = tile.getId();
     var tileDoc = Tiles.findOne({
         tableId: this.tableId,
         location: 'onMap',
@@ -134,7 +122,7 @@ JDMapController.prototype.handleTileDetach = function (options) {
         console.log('DB tile mismatch on detach from canvas');
         return;
     }
-    //4. Update tile data in DB
+    //5. Update tile data in DB
     var relCoords = this.mapController.getRelCoords(tileId);
     Tiles.update(tileDoc._id, {
         $set: {
@@ -152,14 +140,6 @@ JDMapController.prototype.handleTileDetach = function (options) {
 };
 
 
-JDMapController.prototype.lock = function () {
-    this.tableLocked = true;
-}
-
-JDMapController.prototype.unlock = function () {
-    this.tableLocked = false;
-}
-
-JDMapController.prototype.isTableLocked = function () {
+DungeonController.prototype.isTableLocked = function () {
     return this.tableLocked;
 };

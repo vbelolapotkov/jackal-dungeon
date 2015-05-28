@@ -88,7 +88,7 @@ cTileController.prototype.getTile = function (tile) {
 cTileController.prototype.move = function (tile, newCoords, callback) {
     var self = this;
     var t = self.getTile(tile);
-    var coords = self.getCoords(t);
+    var coords = t.getCoords();
     if(coords.left === newCoords.left && coords.top === newCoords.top) return;
 
     t.animate(newCoords, {
