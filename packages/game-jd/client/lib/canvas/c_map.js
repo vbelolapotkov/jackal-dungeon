@@ -31,7 +31,7 @@ cMap.prototype.onMouseUp = function (options) {
         duration: 100,
         onChange: self.canvas.renderAll.bind(self.canvas),
         onComplete: function () {
-            self.fire('modified', {action: 'move'});
+            self.trigger('modified', {action: 'move'});
         }
     });
 };

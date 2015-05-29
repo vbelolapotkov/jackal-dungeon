@@ -89,36 +89,21 @@ TableController.prototype.dbRemovedTileFromTable = function (oldDoc) {
  * @side_effect - registers tile event handlers
  * */
 TableController.prototype.setTileEventHandlers = function (tile) {
-    var self = this;
-    console.log(tile);
-    tile.on('modified', function (options) {
-        self.handleModifiedTileOnTable(this, options);
+    tile.on({
+        'tile:moved': this.handleMovedTileOnTable.bind(this),
+        'tile:rotated': this.handleRotatedTileOnTable.bind(this),
+        'tile:attachToMap': this.attachTileToMap.bind(this),
+        'tile:returnToDeck': this.returnTileToDeck.bind(this)
     });
 };
 
 /*
-* @side_effect - handles tile event 'modified'
-* @tile - tile object, fired event
+* @side_effect - updates db when tile moved on table
 * @options - event options
 * */
-TableController.prototype.handleModifiedTileOnTable = function (tile, options) {
+TableController.prototype.handleMovedTileOnTable = function (options) {
     var self = this;
-    if (!options || !options.action) return;
-    var actionsMap = {
-        'move': self.handleMovedTileOnTable,
-        'rotate': self.handleRotatedTileOnTable,
-        'appendToMap': self.attachTileToMap,
-        'returnToDeck': self.returnTileToDeck
-    };
-    if(actionsMap[options.action]) actionsMap[options.action].call(self,tile);
-};
-
-/*
-* @side_effect - updates db when tile moved on table
-* @tile - tile object
-* */
-TableController.prototype.handleMovedTileOnTable = function (tile) {
-    var self = this;
+    var tile = options.tile;
     var coords = self.mapController.getRelCoords(tile);
     var tileId = tile.getId();
     var tileDoc = Tiles.findOne({tableId: self.tableId, location:'onTable', tileId:tileId});
@@ -138,10 +123,11 @@ TableController.prototype.handleMovedTileOnTable = function (tile) {
 
 /*
  * @side_effect - updates db when tile rotated on table
- * @tile - tile object
+ * @options - event options
  * */
-TableController.prototype.handleRotatedTileOnTable = function (tile) {
+TableController.prototype.handleRotatedTileOnTable = function (options) {
     var self = this;
+    var tile = options.tile;
     var angle = tile.getAngle();
     var tileId = tile.getId();
     var tileDoc = Tiles.findOne({tableId: self.tableId, location: 'onTable', tileId: tileId});
@@ -158,19 +144,26 @@ TableController.prototype.handleRotatedTileOnTable = function (tile) {
 
 /*
 * @side_effect - attaches tile to map and updates db
-* @tile - tile object
+* @options - event options
 * */
-TableController.prototype.attachTileToMap = function (tile) {
+TableController.prototype.attachTileToMap = function (options) {
     var self = this;
+    var tile = options.tile;
     var dCoords = self.mapController.findEmptyUnderTile(tile);
     if(!dCoords) return;
+
+    //check if it's allowed to attach tile at position
+    if(!self.mapController.isAttachAllowed(dCoords)) {
+        console.log('TC: Not allowed to attach at this place');
+        return;
+    }
 
     var tileDoc = Tiles.findOne({
         tableId: self.tableId,
         location: 'onTable',
         tileId: tile.getId()});
     if(!tileDoc || !tileDoc._id) return;
-
+    tile.remove();
     self.mapController.attachTile(tile, dCoords);
     Tiles.update(tileDoc._id, {
         $set: {
@@ -191,10 +184,11 @@ TableController.prototype.attachTileToMap = function (tile) {
 
 /*
 * @side_effect - removes tile from canvas and updates db
-* @tile - tile object to remove
+* @options - event options
 * */
-TableController.prototype.returnTileToDeck = function (tile) {
+TableController.prototype.returnTileToDeck = function (options) {
     var self = this;
+    var tile = options.tile;
     var tileId = tile.getId();
     var tileDoc = Tiles.findOne({tableId: self.tableId, location: 'onTable', tileId: tileId});
 

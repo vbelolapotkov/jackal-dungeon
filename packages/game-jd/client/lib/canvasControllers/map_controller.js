@@ -188,13 +188,17 @@ cMapController.prototype.attachTile = function (tile, dCoords) {
                 updateCanvasOnAttach(tObj, dCoords);
         });
     } else {
-        if(self.map.hasTileAt(dCoords, 'cTile')) {
-            return;
-        }
-        tile.remove();
         self.alignTile(tile, dCoords);
         updateCanvasOnAttach(tile, dCoords);
     }
+};
+
+/*
+* @return - boolean. True if it's allowed to attach new tile at dCoords
+* @dCoords - dungeon coords of tile to be attached
+* */
+cMapController.prototype.isAttachAllowed = function (dCoords) {
+    return !this.map.hasTileAt(dCoords, 'cTile');
 };
 
 /*
@@ -353,7 +357,7 @@ function handleMapDblClick (options) {
     };
     var dCoords = this.findDungeonCoords(cCoords);
     if(!this.map.hasMapTileAt(dCoords))return;
-    this.map.fire('map:detach', {
+    this.map.trigger('map:detach', {
         action: 'detach tile',
         dCoords: dCoords
     });

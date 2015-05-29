@@ -12,7 +12,7 @@ Template.JDTileControls.onRendered(function () {
     tile.on('moving', function () {
         self.positionControls(this);
     });
-    tile.on('modified', function (options) {
+    tile.on('tile:moved', function (options) {
         //update position when moved
         if(!options.action || options.action !== 'move')return;
         self.positionControls(this);
@@ -28,11 +28,11 @@ Template.JDTileControls.events({
     },
     'click button[name="appendToMap"]': function (e) {
         var tile = this;
-        tile.fire('modified', {action:'appendToMap'});
+        tile.trigger('tile:attachToMap', {tile: tile, action:'appendToMap'});
     },
     'click button[name="returnToDeck"]': function (e) {
         var tile = this;
-        tile.fire('modified', {action: 'returnToDeck'});
+        tile.trigger('tile:returnToDeck', {tile: tile, action: 'returnToDeck'});
     }
 });
 
@@ -52,7 +52,7 @@ function animateRotation (button,tileController, tile, angle) {
     button.disabled='disabled';
     tileController.rotate(tile,angle, function (tile) {
         button.disabled=null;
-        tile.fire('modified', {action: 'rotate'});
+        tile.trigger('tile:rotated', {tile: tile, action: 'rotate'});
     });
 }
 

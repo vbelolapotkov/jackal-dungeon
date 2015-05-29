@@ -125,7 +125,6 @@ cTileController.prototype.rotate = function (tile, angle, callback) {
     t.animate('angle',angle, {
         onChange: self.canvas.renderAll.bind(self.canvas),
         onComplete: function () {
-            //t.fire('modified', {action: 'rotate'});
             if(callback) callback(t);
         }
     });

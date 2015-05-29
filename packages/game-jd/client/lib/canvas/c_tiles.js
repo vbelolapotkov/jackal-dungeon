@@ -36,6 +36,17 @@ cTile = fabric.util.createClass(fabric.Image, {
 
     remove: function () {
         if(this.controlsInstance)this.hideControls();
+        //reset all event handlers
+        var events = [
+            'tile:moved',
+            'tile:rotated',
+            'tile:attachToMap',
+            'tile:returnToDeck',
+            'moving'
+        ];
+        _.each(events, function (e) {
+            this.off(e);
+        }, this);
         this.callSuper('remove');
     }
 });
@@ -51,7 +62,7 @@ cTile.prototype.onMouseUp = function (options) {
         duration: 100,
         onChange: self.canvas.renderAll.bind(self.canvas),
         onComplete: function () {
-            self.fire('modified', {action: 'move'});
+            self.trigger('tile:moved', {tile: self, action: 'move'});
         }
     });
 };
@@ -72,12 +83,11 @@ cTile.prototype.getId = function () {
     return this.id;
 };
 
-cTile.prototype.getCoords = function () {
-    return {
-        left: this.left,
-        top: this.top
-    }
-};
+cTile.prototype.getCoords = getCoords;
+
+cTile.prototype.setDungeonCoords = setDungeonCoords;
+
+cTile.prototype.getDungeonCoords = getDungeonCoords;
 
 cTile.prototype.getSize = function () {
     return {
@@ -106,20 +116,6 @@ cTile.prototype.setMapStyle = function () {
     this.set({
         hasBorders: false
     });
-};
-
-cTile.prototype.setDungeonCoords = function(dCoords) {
-    this.set({
-        dX:dCoords.x,
-        dY:dCoords.y
-    });
-};
-
-cTile.prototype.getDungeonCoords = function () {
-    return {
-        x: this.dX,
-        y: this.dY
-    }
 };
 
 cTile.prototype.showControls = function () {
@@ -155,27 +151,6 @@ EmptyTile = fabric.util.createClass(fabric.Rect, {
     }
 });
 
-EmptyTile.prototype.getCoords = function () {
-    return {
-        left: this.left,
-        top: this.top
-    }
-};
-
-EmptyTile.prototype.setDungeonCoords = function(dCoords) {
-    this.set({
-        dX:dCoords.x,
-        dY:dCoords.y
-    });
-};
-
-EmptyTile.prototype.getDungeonCoords = function () {
-    return {
-        x: this.dX,
-        y: this.dY
-    }
-}
-
 EmptyTile.prototype.highlight = function () {
     this.set({
         fill: '#999'
@@ -186,4 +161,33 @@ EmptyTile.prototype.resetHighlight = function () {
     this.set({
         fill: '#fff'
     });
+};
+
+EmptyTile.prototype.getCoords = getCoords;
+
+EmptyTile.prototype.setDungeonCoords = setDungeonCoords;
+
+EmptyTile.prototype.getDungeonCoords = getDungeonCoords;
+
+/***** Common functions for tiles and emptyTiles *****/
+
+function getCoords() {
+    return {
+        left: this.left,
+        top: this.top
+    }
+}
+
+function setDungeonCoords(dCoords) {
+    this.set({
+        dX:dCoords.x,
+        dY:dCoords.y
+    });
+};
+
+function getDungeonCoords() {
+    return {
+        x: this.dX,
+        y: this.dY
+    }
 };
