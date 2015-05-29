@@ -2,13 +2,13 @@
  * Created by vbelolapotkov on 04/05/15.
  */
 DeckController = function (options) {
-    //todo: add deck observer to monitor tiles returned to deck
     //set instance variables
     this.tableId = options.tableId;
+    this.canvas = options.canvas;
     this.deckController = new cTileController (options.canvas);
-    this.deckLoaded = false;
-    this.deckEmpty = true;
+    this.deckHidden = true;
     this.gameController = options.gameController;
+
     //add containers for deckController and new tiles
     this.deckController.createContainer({left:60, top:60});
 };
@@ -17,59 +17,66 @@ DeckController = function (options) {
 * @side_effect - display container and load tiles
 * */
 DeckController.prototype.loadDeck = function () {
-    this.tilesCursor = Tiles.find({
-        tableId: this.tableId,
-        type: {$ne: 'back'},
-        location: 'inDeck'
-    },{reactive: false});
-    if(this.tilesCursor.count()>0) {
-        this.showDeck();
-        this.setDeckObserver();
-    }
+    var self = this;
+
+    //display deck as tile back img
+    var backUrl = Tiles.findOne({tableId: self.tableId, type: 'back'},{reactive: false}).backUrl;
+    var coords = self.deckController.container.getCoords();
+    var opts = {
+        url: backUrl,
+        id: '0',
+        selectable: false,
+        left: coords.left,
+        top: coords.top
+    };
+
+    cTile.fromURL(opts, function (deckTile) {
+        deckTile.on('mouseup', self.getFromTop.bind(self));
+        self.deckTile = deckTile;
+        self.setDeckObserver();
+    });
 };
 /*
  * @side_effect - sets observer for tiles in deck
  * */
 DeckController.prototype.setDeckObserver = function () {
     var self = this;
-    var tilesInDeck = self.tilesCursor;
-    //todo: fix deck observer. Unstable
-    this.deckObserver = tilesInDeck.observe({
-        added: function (doc) {
+    self.tilesInDeck = Tiles.find({
+            tableId: self.tableId,
+            type: {$ne: 'back'},
+            location: 'inDeck'
+        });
+    this.deckObserver = self.tilesInDeck.observe({
+        added: function () {
             self.shuffle();
-            self.checkEmpty();
+            if(self.deckHidden)
+                self.showDeck();
+
+
         },
-        removed: this.checkEmpty.bind(this)
+        removed: function () {
+            if(self.deckIsEmpty())
+                self.hideDeck();
+        }
     });
 };
 
 /*
-* @side_effect - create deckTile and add to canvas. Sets event handler on deckTile.
+* @side_effect - add deckTile to canvas.
 * */
 DeckController.prototype.showDeck = function () {
-    var self = this;
-    //display deck as tile back img
-    var backUrl = Tiles.findOne({tableId: self.tableId, type: 'back'},{reactive: false}).backUrl;
-    var opts = {
-        url: backUrl,
-        id: '0',
-        selectable: false
-    };
-
-    self.deckController.addNewTile(opts, function (tile) {
-        //add event handler for click on deck
-        tile.on('mouseup', self.getFromTop.bind(self));
-        self.deckLoaded = true;
-        self.deckEmpty = false;
-    });
+    if(!this.deckTile) return;
+    this.canvas.add(this.deckTile);
+    this.deckHidden = false;
 };
 
 /*
 * @side_effect removes deckTile from canvas
 * */
 DeckController.prototype.hideDeck = function () {
-    var tile = this.deckController.findById('0');
-    tile.remove();
+    if(!this.deckTile) return;
+    this.deckTile.remove();
+    this.deckHidden = true;
 };
 
 /*
@@ -101,12 +108,6 @@ DeckController.prototype.shuffle = function () {
 /*
 * @side_effect - checks deck tiles cnt and shows or hides deck tile
 * */
-DeckController.prototype.checkEmpty = function () {
-    var cnt = this.tilesCursor.count();
-    if(cnt === 0) {
-        this.hideDeck();
-        this.deckEmpty = true;
-        return;
-    }
-    if (this.deckEmpty && cnt>0) this.showDeck();
-}
+DeckController.prototype.deckIsEmpty = function () {
+    return this.tilesInDeck.count() === 0;
+};
