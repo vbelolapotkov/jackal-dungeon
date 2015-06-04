@@ -21,6 +21,13 @@ Meteor.publish('dungeonPirates', function (tableId) {
     return Pirates.find({tableId: tableId});
 });
 
+Pirates.allow({
+    update: function (userId, doc, fieldName, modifier) {
+        var user = GameTables.parseUserId(userId);
+        if(!user || !user.tableId || !user.tableId===doc.tableId) return false;
+        return true;
+    }
+});
 
 Tiles.allow({
     update: function (userId, doc, fieldNames, modifier) {

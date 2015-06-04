@@ -19,8 +19,11 @@ cPiratesController.prototype.addNewPirate = function (options) {
         fill: options.color,
         left: cCoords.left,
         top: cCoords.top,
+        relLeft: mCoords.left,
+        relTop: mCoords.top,
         dX: options.dCoords.x,
-        dY: options.dCoords.y
+        dY: options.dCoords.y,
+        id: options.id
     });
     this.canvas.add(pirate);
 };

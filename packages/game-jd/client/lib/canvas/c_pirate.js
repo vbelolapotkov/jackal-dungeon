@@ -50,13 +50,11 @@ cPirate.prototype.setPosition = function (cCoords) {
 
 /*
 * Updates relative position properties with reference to some point
-* @param - {Object} coords point coords to set
-* @param - {Object} ref reference point for relative position
+* @param - {Object} relCoords relative coords
 * */
-cPirate.prototype.setRelPosition = function (coords, ref) {
-    this.relLeft = coords.left - ref.left;
-    this.relTop = coords.top - ref.top;
-    this.currentRef = ref;
+cPirate.prototype.setRelPosition = function (relCoords) {
+    this.relLeft = relCoords.left;
+    this.relTop = relCoords.top;
 };
 
 cPirate.prototype.getRelPosition = function () {
@@ -65,10 +63,6 @@ cPirate.prototype.getRelPosition = function () {
         top: this.relTop || 0
     }
 };
-
-cPirate.prototype.getCurrenReference = function () {
-    return this.currentRef;
-}
 
 cPirate.prototype.getSize = function () {
     return {
