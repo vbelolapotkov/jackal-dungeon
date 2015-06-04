@@ -39,7 +39,7 @@ Template.JDTileControls.events({
 function position (tile) {
     //this - template instance
     var self = this;
-    var coords = tile.getCoords();
+    var coords = tile.getPosition();
     var size = tile.getSize();
     var tileLeft = coords.left - size.width/2;
     var tileBottom = coords.top + size.height/2;

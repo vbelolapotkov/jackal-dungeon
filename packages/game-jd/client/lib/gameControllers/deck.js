@@ -21,7 +21,7 @@ DeckController.prototype.loadDeck = function () {
 
     //display deck as tile back img
     var backUrl = Tiles.findOne({tableId: self.tableId, type: 'back'},{reactive: false}).backUrl;
-    var coords = self.deckController.container.getCoords();
+    var coords = self.deckController.container.getPosition();
     var opts = {
         url: backUrl,
         id: '0',

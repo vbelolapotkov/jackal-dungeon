@@ -20,26 +20,10 @@ JDGameController.prototype.loadGame = function () {
         self.deckController = new DeckController(opts);
         self.deckController.loadDeck();
         self.tableController = new TableController(opts);
+        self.piratesController = new PiratesController(opts);
     });
 };
 
 JDGameController.prototype.isTableLocked = function () {
     return this.tableController.isTableLocked();
 };
-
-
-
-
-//    self.piratesController = new JDPiratesController({
-//        tableId: self._id,
-//        canvas: self.canvas,
-//        mapController: self.mapController
-//    });
-//    self.gameSync = new JDSynchronizer({
-//        tableId: self._id,
-//        deckController: self.deckController,
-//        tileController: self.tileController,
-//        mapController: self.mapController
-//    });
-//    console.log('JD: Game Initialized');
-//})

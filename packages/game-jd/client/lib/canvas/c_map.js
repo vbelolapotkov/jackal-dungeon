@@ -36,7 +36,7 @@ cMap.prototype.onMouseUp = function (options) {
     });
 };
 
-cMap.prototype.getCoords = function () {
+cMap.prototype.getPosition = function () {
     return {
         left: this.left,
         top: this.top

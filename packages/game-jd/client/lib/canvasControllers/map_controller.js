@@ -72,7 +72,7 @@ cMapController.prototype.getEntranceCoords = function () {
         return;
     };
     var e = this.map.getEntrance();
-    return this.coordsMap2Canvas(e.getCoords());
+    return this.coordsMap2Canvas(e.getPosition());
 };
 
 /*
@@ -96,7 +96,7 @@ cMapController.prototype.coordsMap2Canvas = function (mCoords) {
         this.logNotFound('coordsMap2Canvas');
         return;
     };
-    var offset = this.map.getCoords();
+    var offset = this.map.getPosition();
 
     return {
         left: mCoords.left + offset.left,
@@ -117,7 +117,7 @@ cMapController.prototype.coordsCanvas2Map = function (cCoords) {
         this.logNotFound('coordsCanvas2Map');
         return;
     };
-    var offset = this.map.getCoords();
+    var offset = this.map.getPosition();
 
     return {
         left: cCoords.left - offset.left,
@@ -136,7 +136,7 @@ cMapController.prototype.alignTile = function (tile, dCoords) {
         return;
     };
     var t = this.map.getTileAt(dCoords);
-    var mCoords = t.getCoords(); //{left, top} with ref to map
+    var mCoords = t.getPosition(); //{left, top} with ref to map
     var cCoords = this.coordsMap2Canvas(mCoords); //{left, top} with ref to canvas
     tile.setCoordsWithUpdate(cCoords);
 };
@@ -169,7 +169,7 @@ cMapController.prototype.attachTile = function (tile, dCoords) {
     if(!tileController.isTile(tile)) {
         //tile - tile options
         var entrance = self.map.getEntrance();
-        var eCCoords = self.coordsMap2Canvas(entrance.getCoords());
+        var eCCoords = self.coordsMap2Canvas(entrance.getPosition());
         //todo: replace fixed number to tile size
         var cCoords = {
             left: Math.round(eCCoords.left + dCoords.x*100),
@@ -250,7 +250,7 @@ cMapController.prototype.addEmptyTiles = function (dCoords) {
     if(!dCoords.length) dCoords = [dCoords];
 
     var entrance = this.map.getEntrance();
-    var eCoords = entrance.getCoords();
+    var eCoords = entrance.getPosition();
     eCoords = this.coordsMap2Canvas(eCoords);
 
     _.each(dCoords, function (mapCoords) {
@@ -319,7 +319,7 @@ cMapController.prototype.findEmptyUnderTile = function (tile) {
     };
     //look for the empty tile under the center of tile to be attached
     //var self = this;
-    var tileCenter = tile.getCoords();
+    var tileCenter = tile.getPosition();
     var dCoords = this.findDungeonCoords(tileCenter);
     if(!this.map.hasTileAt(dCoords,'emptyTile'))return;
     return dCoords;
@@ -337,7 +337,7 @@ cMapController.prototype.findDungeonCoords = function (point) {
     };
     var mPoint = this.coordsCanvas2Map(point); //coordinates of point in map
     var entrance = this.map.getEntrance();
-    var eCoords = entrance.getCoords(); //coordinates of entrance in map
+    var eCoords = entrance.getPosition(); //coordinates of entrance in map
     var size = entrance.getSize();
     return {
         x: Math.round((mPoint.left - eCoords.left)/size.width),

@@ -23,9 +23,11 @@ JD = function (tableId) {
 
 JD.prototype.initGame = function (canvasId) {
     console.log('JD: Initializing Game ...');
-    var canvas = new CanvasExt(canvasId);
-    canvas.setWidth(window.innerWidth*0.9);
-    canvas.setHeight(window.innerHeight*0.9);
+    var canvas = new CanvasExt(canvasId, {
+        width: window.innerWidth*0.9,
+        height: window.innerHeight*0.9,
+        selection: false
+    });
     this.gameController = new JDGameController({
         tableId: this._id,
         canvas: canvas

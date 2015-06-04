@@ -83,7 +83,7 @@ cTile.prototype.getId = function () {
     return this.id;
 };
 
-cTile.prototype.getCoords = getCoords;
+cTile.prototype.getPosition = getCoords;
 
 cTile.prototype.setDungeonCoords = setDungeonCoords;
 
@@ -163,7 +163,7 @@ EmptyTile.prototype.resetHighlight = function () {
     });
 };
 
-EmptyTile.prototype.getCoords = getCoords;
+EmptyTile.prototype.getPosition = getCoords;
 
 EmptyTile.prototype.setDungeonCoords = setDungeonCoords;
 

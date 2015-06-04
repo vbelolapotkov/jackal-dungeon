@@ -4,10 +4,21 @@
 CanvasExt = fabric.util.createClass(fabric.Canvas, {
     tapholdThreshold: 2000,
 
+    initialize: function (el, options) {
+        this.callSuper('initialize',el, options);
+        this._prevActiveObject = null;
+    },
+    
+    _discardActiveObject: function () {
+        this._prevActiveObject = this._activeObject;
+        this.callSuper('_discardActiveObject');
+    },
+    
     _bindEvents: function () {
         var self = this;
 
         self.callSuper('_bindEvents');
+        self._onClick = self._onClick.bind(self);
         self._onDoubleClick = self._onDoubleClick.bind(self);
         self._onTapHold = self._onTapHold.bind(self);
     },
@@ -16,9 +27,20 @@ CanvasExt = fabric.util.createClass(fabric.Canvas, {
         var self = this;
         self.callSuper('_initEventListeners');
 
+        fabric.util.addListener(self.upperCanvasEl, 'click', self._onClick);
         fabric.util.addListener(self.upperCanvasEl, 'dblclick', self._onDoubleClick);
     },
-
+    _onClick: function (e) {
+        var self = this;
+        if(e.which === 3) e.preventDefault();
+        var target = self.findTarget(e);
+        if(target && !self.isDrawingMode) {
+            target.fire('object:click', {
+                target: target,
+                e: e
+            });
+        }
+    },
     _onDoubleClick: function(e) {
         var self = this;
 
@@ -155,6 +177,11 @@ CanvasExt = fabric.util.createClass(fabric.Canvas, {
         var self = this;
         self.callSuper('removeListeners');
 
+        fabric.util.removeListener(self.upperCanvasEl, 'click', self._onClick);
         fabric.util.removeListener(self.upperCanvasEl, 'dblclick', self._onDoubleClick);
     }
 });
+
+CanvasExt.prototype.getPrevActiveObject = function () {
+    return this._prevActiveObject;
+};
