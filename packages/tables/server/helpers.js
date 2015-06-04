@@ -26,5 +26,14 @@ GameTables = {
             {upsert: true}
         );
         return num > 0;
+    },
+    /*
+    * Returns username and tableId from userId string
+    * @return - {Object} name: nickname, tableId: tableId
+    * @param - {String} userId
+    * */
+    parseUserId: function (userId) {
+        var gT = new GameTable('0');
+        return gT.parseUserId(userId);
     }
 };

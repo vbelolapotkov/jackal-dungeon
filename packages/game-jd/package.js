@@ -27,6 +27,7 @@ Package.onUse(function (api) {
         'server/assets/tiles.json',
         'server/map_server.js',
         'server/deck_server.js',
+        'server/pirates_server.js',
         'server/jd_server.js',
         'server/publications.js',
         'server/init.js'

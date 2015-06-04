@@ -7,17 +7,49 @@ cPiratesController = function (canvas) {
     this.CTYPE = 'cPirate';
 }
 
-cPiratesController.prototype.addNewPirate = function (color) {
-    //create new pirate and put it at the entrance
-    var coords = this.mapController.getEntranceCoords();
+/*
+* Creates new pirate with specified options and adds to canvas
+* @param - {Object} options of new pirate
+* */
+cPiratesController.prototype.addNewPirate = function (options) {
+    var eCoords = this.mapController.getEntranceCoords();
+    var mCoords = options.mCoords || this.setInitialCoords();
+    var cCoords = JDGameController.rel2abs(mCoords, eCoords);
     var pirate = new cPirate({
-        fill: color,
-        left: coords.left,
-        top: coords.top,
-        dX: 0,
-        dY: 0
+        fill: options.color,
+        left: cCoords.left,
+        top: cCoords.top,
+        dX: options.dCoords.x,
+        dY: options.dCoords.y
     });
     this.canvas.add(pirate);
+};
+
+/*
+* Generates default map coords for new pirates
+* @return - {Object} left; top coordinates in map system;
+* */
+cPiratesController.prototype.setInitialCoords = function () {
+    var pirates = this.findPiratesAt({x:0,y:0});
+    var fixedPoints = [
+        {x:1,y:-1},
+        {x:1,y:1},
+        {x:-1,y:1},
+        {x:-1,y:-1},
+        {x:3,y:-1},
+        {x:3,y:1},
+        {x:1,y:3},
+        {x:-1,y:3},
+        {x:-3,y:1},
+        {x:-3,y:-1},
+        {x:-1,y:-3},
+        {x:1,y:3}];
+    var r = cPirate.getDefaultRadius();
+    var point = fixedPoints[(pirates.length % fixedPoints.length)];
+    return {
+        left: point.x*r,
+        top: point.y*r
+    };
 };
 
 /*

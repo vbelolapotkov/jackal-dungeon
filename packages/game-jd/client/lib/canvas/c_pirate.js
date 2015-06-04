@@ -2,7 +2,7 @@ cPirate = fabric.util.createClass(fabric.Circle, {
     type: 'cPirate',
 
     initialize: function (options) {
-        options.radius = 15;
+        options.radius = 12.5;
         options.hasControls = false;
         options.borderColor = '#0d0';
         options.originX = 'center';
@@ -14,6 +14,10 @@ cPirate = fabric.util.createClass(fabric.Circle, {
         this.on('object:click', onClick.bind(this));
     }
 });
+
+cPirate.getDefaultRadius = function () {
+    return 12.5;
+};
 
 cPirate.prototype.getDungeonCoords = function () {
     return {

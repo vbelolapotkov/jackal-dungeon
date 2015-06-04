@@ -12,9 +12,16 @@ JD = function (tableId) {
     var ts = Meteor.subscribe('tilesOnTable', self._id, function () {
         console.log('JD: Table subscription is ready');
     });
+    var ps = Meteor.subscribe('dungeonPirates', self._id, function () {
+        console.log('JD: Pirates subscription is ready');
+    })
     //subscribe to data if available
     Tracker.autorun(function () {
-        if(ms.ready() && ds.ready() && ts.ready()) {
+        if(ms.ready() &&
+            ds.ready() &&
+            ts.ready() &&
+            ps.ready()
+        ) {
             //all data ready
             self.dataReady.set(true);
         }

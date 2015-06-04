@@ -2,7 +2,7 @@
  * Created by vbelolapotkov on 30/04/15.
  */
 Template.GameJDMain.onCreated(function () {
-    var tableId = this.data ? this.data.tableId : '';
+    var tableId = this.data ? this.data._id : '';
     this.game = new JD(tableId);
 });
 

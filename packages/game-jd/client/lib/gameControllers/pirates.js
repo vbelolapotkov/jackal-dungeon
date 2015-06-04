@@ -5,21 +5,31 @@ PiratesController = function (options) {
     this.tableId = options.tableId;
     this.piratesController = new cPiratesController(options.canvas);
     this.mapController = new cMapController(options.canvas);
-    this.loadPlayers();
     this.mapController.map.on('object:click',handleMapClicked.bind(this));
     this.mapController.map.on('moving',handleMapMoved.bind(this));
-}
+    this.setPiratesObserver();
+    Meteor.call('PirateCheckMeIn');
+};
 
-PiratesController.prototype.loadPlayers = function () {
-    var colors = [
-        '#f00',
-        '#0f0',
-        '#00f'
-    ];
-    _.each(colors, function (color) {
-        this.piratesController.addNewPirate(color);
-    }, this);
-    console.log(this.piratesController.findPiratesAt({x:0,y:0}));
+PiratesController.prototype.setPiratesObserver = function () {
+    var self = this;
+    self.piratesCursor = Pirates.find({tableId: self.tableId});
+    self.piratesCursor.observe({
+        added: function (doc) {
+            self.piratesController.addNewPirate({
+                color: doc.color,
+                id: doc._id,
+                dCoords: doc.dCoords,
+                mCoords: doc.mCoords
+            });
+        },
+        changed: function (newDoc, oldDoc) {
+
+        },
+        removed: function (oldDoc) {
+
+        }
+    });
 };
 
 /*
@@ -29,7 +39,6 @@ PiratesController.prototype.loadPlayers = function () {
 function handleMapClicked(options) {
     var pirate = this.piratesController.getSelected();
     if(!pirate) {
-        console.log('JDPirate: pirate was not selected. Not moving.');
         return;
     };
     var cCoords = {
@@ -39,7 +48,6 @@ function handleMapClicked(options) {
     //check if player clicked on map tile
     var nextDCoords = this.mapController.findDungeonCoords(cCoords);
     if(!this.mapController.map.hasMapTileAt(nextDCoords)){
-        console.log('JDPirate: No tile there. Not moving.');
         return;
     }
     var pirateDCoords = pirate.getDungeonCoords();

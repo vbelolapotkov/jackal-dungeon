@@ -43,6 +43,7 @@
 			{{#if isGameStarted}}
 				<!--game started load game template-->
 				{{#if isGameReady}}
+					<!--Set game context and show it's template-->
 					{{#with currentGame}}
 						{{> Template.dynamic template=currentGameTemplate}}
 					{{/with}}

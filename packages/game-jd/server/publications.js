@@ -17,6 +17,9 @@ Meteor.publish('tilesDeck', function (tableId) {
     return Tiles.find({tableId: tableId, location: 'inDeck'},{fields:{imgUrl: 0}});
 });
 
+Meteor.publish('dungeonPirates', function (tableId) {
+    return Pirates.find({tableId: tableId});
+});
 
 
 Tiles.allow({
