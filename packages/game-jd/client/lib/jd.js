@@ -14,13 +14,17 @@ JD = function (tableId) {
     });
     var ps = Meteor.subscribe('dungeonPirates', self._id, function () {
         console.log('JD: Pirates subscription is ready');
-    })
+    });
+    var dis = Meteor.subscribe('tableDice', self._id, function () {
+        console.log('JD: Dice subscription is ready');
+    });
     //subscribe to data if available
     Tracker.autorun(function () {
         if(ms.ready() &&
             ds.ready() &&
             ts.ready() &&
-            ps.ready()
+            ps.ready() &&
+            dis.ready()
         ) {
             //all data ready
             self.dataReady.set(true);
@@ -38,6 +42,7 @@ JD.prototype.initGame = function (canvasId) {
         height: window.innerHeight - wRect.top-22,
         selection: false
     });
+    Blaze.renderWithData(Template.JDDice,{tableId: this._id}, w);
     this.gameController = new JDGameController({
         tableId: this._id,
         canvas: canvas

@@ -1,0 +1,24 @@
+<template name="JDDice">
+    <div class="diceContainer">
+        <ul class="list-inline">
+            <li>
+                <button id="jdSingleDice" type="button" class="btn btn-success jd-icon-dice"></button>
+            </li>
+            <li>
+                <button id="jdDoubleDice" type="button" class="btn btn-danger jd-icon-dice"></button>
+            </li>
+        </ul>
+        <div>
+            {{#each diceResults}}
+                {{> JDDiceResult}}
+            {{/each}}
+        </div>
+    </div>
+</template>
+
+<template name="JDDiceResult">
+    <div class="alert {{diceAMT}}" data-toggle="tooltip" data-original-title="{{ownerName}}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>{{formattedName}} ></strong> {{d1}} {{#if d2}}&amp; {{d2}}{{/if}}
+    </div>
+</template>

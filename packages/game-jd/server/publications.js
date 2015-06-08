@@ -21,11 +21,24 @@ Meteor.publish('dungeonPirates', function (tableId) {
     return Pirates.find({tableId: tableId});
 });
 
+Meteor.publish('tableDice', function (tableId) {
+    return Dice.find({tableId: tableId});
+});
+
 Pirates.allow({
     update: function (userId, doc, fieldName, modifier) {
         var user = GameTables.parseUserId(userId);
         if(!user || !user.tableId || !user.tableId===doc.tableId) return false;
         return true;
+    }
+});
+
+Dice.allow({
+    insert: function () {return false;},
+    update: function () {return false;},
+    remove: function (userId, doc) {
+        var user = GameTables.parseUserId(userId);
+        return user && user.tableId === doc.tableId;
     }
 });
 

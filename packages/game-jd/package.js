@@ -29,6 +29,7 @@ Package.onUse(function (api) {
         'server/deck_server.js',
         'server/pirates_server.js',
         'server/gold_server.js',
+        'server/dice_server.js',
         'server/jd_server.js',
         'server/publications.js',
         'server/init.js'
@@ -57,6 +58,9 @@ Package.onUse(function (api) {
         'client/views/tile_controls.js',
         'client/views/pirate_info.css',
         'client/views/pirate_info.html',
+        'client/views/dice.html',
+        'client/views/dice.css',
+        'client/views/dice.js',
         'client/views/game_main.html',
         'client/views/game_main.js'
     ], 'client');
