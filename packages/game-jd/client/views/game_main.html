@@ -1,5 +1,14 @@
 <template name="GameJDMain">
-    <div id="jdGameContainer" class="row jdContainer">
-        <canvas id="jackalCanvas"></canvas>
+    <div class="row">
+        {{#each jdPirates}}
+            {{> JDPirateInfo}}
+        {{/each}}
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="jdGameContainer" class="panel panel-default">
+                <canvas id="jackalCanvas"></canvas>
+            </div>
+        </div>
     </div>
 </template>

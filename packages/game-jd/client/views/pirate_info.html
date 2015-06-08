@@ -1,0 +1,36 @@
+<template name="JDPirateInfo">
+    <div class="col-xs-6 col-sm-4 col-md-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="color-picker" style="background-color:{{color}}"></div>
+                <h3 class="panel-title">{{nickname}}</h3>
+            </div>
+            <ul class="nav nav-justified">
+                <li class="text-center">
+                    <div class="jd-icon-container">
+                        <img src="/img/gold.jpg" class="jd-icon" alt="Rounded Image">
+                    </div>
+                    <div class="jd-badge-container">
+                        <span class="badge">{{goldAMT}}</span>
+                    </div>
+                </li>
+                <li class="text-center">
+                    <div class="jd-icon-container">
+                        <img src="/img/bet.jpg" class="jd-icon" alt="Rounded Image">
+                    </div>
+                    <div class="jd-badge-container">
+                        <span class="badge">{{betAMT}}</span>
+                    </div>
+                </li>
+                <li class="text-center">
+                    <div class="jd-icon-container">
+                        <img src="/img/bat.jpg" class="jd-icon" alt="Rounded Image">
+                    </div>
+                    <div class="jd-badge-container">
+                        <span class="badge">{{batAMT}}</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>

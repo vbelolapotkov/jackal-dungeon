@@ -11,6 +11,7 @@ DungeonMap.init = function (tableId, entranceUrl) {
         imgUrl: entranceUrl,
         type: 'entrance',
         location: 'onMap',
+        hasGold: false,
         dCoords: {
             x: 0,
             y: 0

@@ -16,3 +16,9 @@ Template.GameJDMain.onRendered(function () {
         //todo: show spinner while loading game data
     });
 });
+
+Template.GameJDMain.helpers({
+    jdPirates : function () {
+        return Pirates.find({tableId: this._id});
+    }
+});

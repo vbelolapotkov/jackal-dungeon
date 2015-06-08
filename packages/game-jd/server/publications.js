@@ -39,7 +39,9 @@ Tiles.allow({
             'angle',
             'lastChange',
             'location',
-            'ownerId'];
+            'ownerId',
+            'hasGold'
+        ];
         //check if each field in fieldNames is in allowed list
         return _.every(fieldNames, function (field) {
             return _.contains(allowedFields, field);

@@ -126,6 +126,23 @@ cMapController.prototype.coordsCanvas2Map = function (cCoords) {
 };
 
 /*
+* converts dungeon coords to map coords
+* @return - {Object} map coords
+* @param - {Object} dCoords - dungeon coords
+* */
+cMapController.prototype.coordsDungeon2Map = function (dCoords) {
+    if(!this.map) {
+        this.logNotFound('coordsDungeon2Map');
+        return;
+    };
+    var size = cTile.getDefaultSize();
+    return {
+        left: Math.round(dCoords.x*size.width),
+        top: Math.round(dCoords.y*size.height)
+    }
+};
+
+/*
 * sets tile coordinates equal to map tile with dCoords;
 * @tile - tile which coordinates are modified
 * @dCoords - {x,y} tile coordinates on map with ref to entrance

@@ -25,7 +25,8 @@ DeckController.init = function (tiles, options) {
             tileId: tile.id,
             type: tile.type,
             dIndex: index,
-            location: 'inDeck'
+            location: 'inDeck',
+            hasGold: tile.type === 'cavern'
         });
     });
     DeckController.shuffle(tableId);

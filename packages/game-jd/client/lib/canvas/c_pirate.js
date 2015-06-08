@@ -71,11 +71,12 @@ cPirate.prototype.getSize = function () {
 };
 
 function onSelected(options) {
+    this.bringToFront();
     this.unselectOnClick = !options.e;
-}
+};
 
 function onClick() {
     if(this.unselectOnClick)
         this.canvas.discardActiveObject();
     else this.unselectOnClick = true;
-}
+};

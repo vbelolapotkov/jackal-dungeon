@@ -5,7 +5,7 @@ cPiratesController = function (canvas) {
     this.canvas = canvas;
     this.mapController = new cMapController(canvas);
     this.CTYPE = 'cPirate';
-}
+};
 
 /*
 * Creates new pirate with specified options and adds to canvas

@@ -62,6 +62,7 @@ function handleMCoordsChange(pirate, mCorods) {
     var cCoords = JDGameController.rel2abs(mCorods, eCoords);
     var pCoords = pirate.getPosition();
     if(pCoords.left === cCoords.left && pCoords.top === cCoords.top) return;
+    pirate.setRelPosition(mCorods);
     animatePirateMove.call(this,pirate,cCoords);
 };
 

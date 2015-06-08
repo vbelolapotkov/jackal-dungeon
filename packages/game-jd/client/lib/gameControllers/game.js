@@ -20,6 +20,7 @@ JDGameController.prototype.loadGame = function () {
         self.deckController.loadDeck();
         self.tableController = new TableController(opts);
         self.piratesController = new PiratesController(opts);
+        self.goldController = new GoldController(opts);
         self.setPlayersObserver();
     });
 };

@@ -51,6 +51,13 @@ cTile = fabric.util.createClass(fabric.Image, {
     }
 });
 
+cTile.getDefaultSize = function () {
+    return {
+        width: 100,
+        height: 100
+    };
+}
+
 cTile.prototype.onMouseUp = function (options) {
     //idea: use object center coords as reference instead of event coords
     var self = this;
@@ -72,8 +79,6 @@ cTile.prototype.onTileSelect = function () {
 };
 
 cTile.fromURL = function (options, callback) {
-    //todo: replace fromURL method in the project
-    //async method with image loading before tile creation
     fabric.util.loadImage(options.url, function (img) {
         callback && callback(new cTile(options, img))
     });

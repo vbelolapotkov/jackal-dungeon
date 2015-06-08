@@ -1,0 +1,23 @@
+.jd-icon-container {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 5px;
+}
+
+.jd-badge-container{
+    display: inline-block;
+    vertical-align: middle;
+    padding: 5px;
+}
+
+.jd-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.color-picker {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    float: right;
+}

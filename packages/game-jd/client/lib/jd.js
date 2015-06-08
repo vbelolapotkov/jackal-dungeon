@@ -30,9 +30,12 @@ JD = function (tableId) {
 
 JD.prototype.initGame = function (canvasId) {
     console.log('JD: Initializing Game ...');
+    //var w = $('#jdGameContainer').width();
+    var w = document.getElementById('jdGameContainer');
+    var wRect = w.getBoundingClientRect();
     var canvas = new CanvasExt(canvasId, {
-        width: window.innerWidth*0.9,
-        height: window.innerHeight*0.9,
+        width: w.clientWidth,
+        height: window.innerHeight - wRect.top-22,
         selection: false
     });
     this.gameController = new JDGameController({
