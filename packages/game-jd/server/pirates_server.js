@@ -1,6 +1,6 @@
 PiratesController = {};
 PiratesController.addNewPirate = function (tableId, nickname) {
-    Pirates.insert({
+    return Pirates.insert({
         tableId: tableId,
         nickname: nickname,
         color: PiratesController.pickRandomColor(),
@@ -39,9 +39,9 @@ Meteor.methods({
 
         var pirate = Pirates.findOne({tableId: player.tableId, nickname: player.name});
         //do nothing Pirate already in game
-        if(pirate) return;
+        if(pirate) return pirate._id;
         //insert new pirate
-        PiratesController.addNewPirate(player.tableId, player.name);
+        return PiratesController.addNewPirate(player.tableId, player.name);
     }
 });
 

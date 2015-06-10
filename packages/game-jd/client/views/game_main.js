@@ -4,6 +4,12 @@
 Template.GameJDMain.onCreated(function () {
     var tableId = this.data ? this.data._id : '';
     this.game = new JD(tableId);
+    this.currentPirateId = new ReactiveVar();
+    var self = this;
+    Meteor.call('PirateCheckMeIn', function (err, result) {
+        if(err) console.error('JD Game Error:' + err.reason);
+        else self.currentPirateId.set(result);
+    });
 });
 
 Template.GameJDMain.onRendered(function () {
@@ -18,7 +24,14 @@ Template.GameJDMain.onRendered(function () {
 });
 
 Template.GameJDMain.helpers({
-    jdPirates : function () {
-        return Pirates.find({tableId: this._id});
+    currentPirate: function () {
+        return Pirates.findOne(Template.instance().currentPirateId.get());
+    },
+    activeCompetition: function () {
+        return Dice.findOne({
+            tableId: this.tableId,
+            competition: true,
+            competitionType: {$ne:null}
+        });
     }
 });

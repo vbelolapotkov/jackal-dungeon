@@ -1,0 +1,76 @@
+#jdGameContainer {
+    position: relative;
+}
+
+.diceContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+}
+
+.diceContainer > ul {
+    text-align: right;
+    margin-right: -5px;
+}
+
+.jd-dice-single {
+    background: url("/img/dice_1.png") no-repeat center;
+    background-size: contain;
+    /*z-index: 100;*/
+}
+
+.jd-dice-dual {
+    background: url("/img/dice_2.png") no-repeat center;
+    background-size: contain;
+}
+
+.jd-icon-container {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 5px;
+}
+
+.jd-badge-container{
+    display: inline-block;
+    vertical-align: middle;
+    padding: 5px;
+}
+
+.jd-icon-sm {
+    width: 1.75em;
+    height: 1.75em;
+}
+
+.jd-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.jd-icon-lg {
+    width: 60px;
+    height: 60px;
+}
+
+.color-picker {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    float: right;
+}
+
+.jd-tileControls {
+    position: absolute;
+    width: 100px;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+}
+
+.jd-tileControls:hover {
+    opacity: 1;
+}
+
+.jd-highlight-yellow {
+    background-color: yellow;
+}

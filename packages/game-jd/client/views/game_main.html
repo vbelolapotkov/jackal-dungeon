@@ -1,9 +1,14 @@
 <template name="GameJDMain">
-    <div class="row">
-        {{#each jdPirates}}
-            {{> JDPirateInfo}}
-        {{/each}}
-    </div>
+    {{#with currentPirate}}
+        <!--Block representing Pirates info-->
+        {{> JDPiratesInfo}}
+    <!--Competition block placed here to get access to current pirate info-->
+        {{#if activeCompetition}}
+            {{#with activeCompetition}}
+                {{> JDCompetition}}
+            {{/with}}
+        {{/if}}
+    {{/with}}
     <div class="row">
         <div class="col-xs-12">
             <div id="jdGameContainer" class="panel panel-default">

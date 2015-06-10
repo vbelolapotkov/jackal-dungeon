@@ -38,8 +38,6 @@ Meteor.methods({
     GoldCollectAt: function (dCoords) {
         //todo: check method parameters
         var user = GameTables.parseUserId(this.userId);
-        console.log(this.userId);
-        console.log(user);
         var currentPirate = Pirates.findOne({
             tableId: user.tableId,
             nickname: user.name

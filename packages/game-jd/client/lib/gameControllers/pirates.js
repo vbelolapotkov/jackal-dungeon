@@ -8,7 +8,6 @@ PiratesController = function (options) {
     this.mapController.map.on('object:click',handleMapClicked.bind(this));
     this.mapController.map.on('moving',handleMapMoved.bind(this));
     this.setPiratesObserver();
-    Meteor.call('PirateCheckMeIn');
 };
 
 PiratesController.prototype.setPiratesObserver = function () {

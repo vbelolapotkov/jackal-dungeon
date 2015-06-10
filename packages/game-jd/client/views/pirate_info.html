@@ -1,3 +1,17 @@
+<template name="JDPiratesInfo">
+    <div class="row">
+        <!--Render current pirate-->
+        {{#with this}}
+            {{> JDPirateInfo}}
+        {{/with}}
+        <!--Render other pirates-->
+        {{#each otherPirates}}
+            {{> JDPirateInfo}}
+        {{/each}}
+    </div>
+</template>
+
+
 <template name="JDPirateInfo">
     <div class="col-xs-6 col-sm-4 col-md-2">
         <div class="panel panel-default">
@@ -7,7 +21,7 @@
             </div>
             <ul class="nav nav-justified">
                 <li class="text-center">
-                    <div class="jd-icon-container">
+                    <div class="jd-icon-container" data-jdcoin-type="gold">
                         <img src="/img/gold.jpg" class="jd-icon" alt="Rounded Image">
                     </div>
                     <div class="jd-badge-container">
@@ -15,7 +29,7 @@
                     </div>
                 </li>
                 <li class="text-center">
-                    <div class="jd-icon-container">
+                    <div class="jd-icon-container" data-jdcoin-type="bet">
                         <img src="/img/bet.jpg" class="jd-icon" alt="Rounded Image">
                     </div>
                     <div class="jd-badge-container">
@@ -23,7 +37,7 @@
                     </div>
                 </li>
                 <li class="text-center">
-                    <div class="jd-icon-container">
+                    <div class="jd-icon-container" data-jdcoin-type="bat">
                         <img src="/img/bat.jpg" class="jd-icon" alt="Rounded Image">
                     </div>
                     <div class="jd-badge-container">

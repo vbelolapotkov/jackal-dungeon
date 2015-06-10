@@ -1,0 +1,34 @@
+<template name="JDSelectPirateForCompetition">
+    <div class="modal fade" id="jdSelectPirateForCompetition">
+    	<div class="modal-dialog modal-sm">
+    		<div class="modal-content">
+    			<div class="modal-header">
+    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    				<h4 class="modal-title">{{{competitionHeader}}}</h4>
+    			</div>
+    			<div class="modal-body">
+					{{#if competitionAllowed}}
+						<ul class="list-group">
+							<li class="list-group-item active">Выберите оппонента <span class="pull-right">
+								<img src="/img/gold.jpg" alt="Gold icon" class="jd-icon-sm"/>
+							</span></li>
+							{{#each candidates}}
+								<li class="list-group-item {{highlighted}}">
+									{{nickname}}<span class="badge">{{goldAMT}}</span>
+								</li>
+							{{/each}}
+						</ul>
+					{{else}}
+						<div class="alert alert-warning">
+							{{notAllowedReason}}
+						</div>
+					{{/if}}
+    			</div>
+    			<div class="modal-footer">
+    				<button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+    				<button id="jdStartCompetitionBtn" type="button" class="btn btn-primary" disabled="disabled">Начать испытание</button>
+    			</div>
+    		</div><!-- /.modal-content -->
+    	</div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</template>
