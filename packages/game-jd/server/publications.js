@@ -43,8 +43,9 @@ Dice.allow({
 });
 
 Tiles.allow({
-    update: function (userId, doc, fieldNames, modifier) {
-        //todo: add userId checking
+    update: function (userId, doc, fieldNames) {
+        var user = GameTables.parseUserId(userId);
+        if(!user || !user.tableId || !user.tableId===doc.tableId) return false;
         //todo: think about location change restrictions
         var allowedFields = [
             'coords',

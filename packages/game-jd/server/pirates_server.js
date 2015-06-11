@@ -1,9 +1,10 @@
 PiratesController = {};
 PiratesController.addNewPirate = function (tableId, nickname) {
+    var cnt = Pirates.find({tableId: tableId}).count();
     return Pirates.insert({
         tableId: tableId,
         nickname: nickname,
-        color: PiratesController.pickRandomColor(),
+        color: PiratesController.pickColor(cnt),
         dCoords: {
             x: 0,
             y: 0
@@ -14,18 +15,18 @@ PiratesController.addNewPirate = function (tableId, nickname) {
     });
 };
 
-PiratesController.pickRandomColor = function () {
+PiratesController.pickColor = function (cnt) {
     var colors = [
-        '#000', //white
-        '#fff', //black
-        '#f00', //red
-        '#0f0', //green
         '#00f', //blue
         '#ff0', //yellow
+        '#f00', //red
+        '#0f0', //green
         '#f0f', //magenta
-        '#0ff'  //cyan
+        '#0ff',  //cyan
+        '#fff', //black
+        '#000' //white
     ];
-    return colors[Math.floor(Math.random()*8)];
+    return colors[cnt % colors.length];
 };
 
 Meteor.methods({
@@ -42,6 +43,30 @@ Meteor.methods({
         if(pirate) return pirate._id;
         //insert new pirate
         return PiratesController.addNewPirate(player.tableId, player.name);
+    },
+    'PiratePutGold': function () {
+        var player = GameTables.parseUserId(this.userId);
+        if(!player || !player.tableId || !player.name)
+            throw new Meteor.Error(401, 'Unauthorized action');
+
+        var pirate = Pirates.findOne({tableId: player.tableId, nickname: player.name});
+        if(!pirate) throw new Meteor.Error(404, 'Pirate not found');
+
+        var tileDoc = Tiles.findOne({
+            tableId: pirate.tableId,
+            dCoords: pirate.dCoords
+        });
+
+        if(!tileDoc) throw new Meteor.Error(404, 'Tile not found');
+        if(tileDoc.hasGold) throw new Meteor.Error(403, 'Tile already has gold');
+
+        Tiles.update(tileDoc._id,{$set:{hasGold: true}}, function (err) {
+            if(err) throw new Meteor.Error(503, 'Error in updating tileDoc: '+err.reason);
+            else Pirates.update(pirate._id, {$inc:{goldAMT:-1}}, function (err) {
+                if(err) throw new Meteor.Error(503, 'Error in updating pirate goldAMT: '+err.reason);
+            });
+        });
+
     }
 });
 

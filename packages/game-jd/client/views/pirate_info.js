@@ -21,7 +21,11 @@ Template.JDPiratesInfo.helpers({
 Template.JDPirateInfo.events({
     'dblclick .jd-icon-container[data-current-pirate="true"][data-jdcoin-type="gold"]': function (e) {
         e.preventDefault();
-        console.log('put gold on table');
+        if (this.goldAMT < 1) return;
+        Meteor.call('PiratePutGold', function (err) {
+            if(err)
+                console.error('JD PirateInfo: Failed to put gold on map. '+err.reason);
+        });
     },
     'dblclick .jd-icon-container[data-current-pirate="true"][data-jdcoin-type="bat"]': function (e) {
         e.preventDefault();

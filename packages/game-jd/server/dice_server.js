@@ -93,6 +93,12 @@ Meteor.methods({
             defenderId: defender._id,
             defenderName: defender.nickname
         });
+
+        //decrease competition coin amount
+        if(options.type === 'bet')
+            Pirates.update(pirate._id, {$inc: {betAMT:-1}});
+        else if(options.type === 'bat')
+            Pirates.update(pirate._id, {$inc: {batAMT:-1}});
     },
     JDEndCompetition: function (competitionId) {
         check(competitionId, String);

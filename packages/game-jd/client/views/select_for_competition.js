@@ -20,15 +20,30 @@ Template.JDSelectPirateForCompetition.helpers({
     },
     competitionAllowed: function () {
         // no conditions for bat competition
-        if(this.type === 'bat') return Template.instance().candidatesCursor.count() > 0;
-        return this.currentPirate.goldAMT > 0 && Template.instance().candidatesCursor.count() > 0;
+        if(this.type === 'bat') {
+            return  this.currentPirate.batAMT > 0 &&
+                    Template.instance().candidatesCursor.count() > 0;
+        }
+        if(this.type === 'bet') {
+            return  this.currentPirate.betAMT > 0 &&
+                    this.currentPirate.goldAMT > 0 &&
+                    Template.instance().candidatesCursor.count() > 0;
+        }
     },
     notAllowedReason: function () {
+        if(this.type === 'bat' && this.currentPirate.batAMT < 1) {
+            return 'Для испытания нужен хотя бы один жетон летучих мышей.';
+        }
+
+        if(this.type === 'bet' && this.currentPirate.betAMT < 1) {
+            return 'Для испытания нужен хотя бы один жетон пари на золото.';
+        }
+
         if(this.type === 'bet' && this.currentPirate.goldAMT < 1) {
             return 'Для пари на золото нужно иметь в кармане хотя бы одну монету.'
         }
         if(Template.instance().candidatesCursor.count() < 1){
-            return 'Нет подходящих кандидатов для исыпытания';
+            return 'Нет подходящих кандидатов для исыпытания.';
         }
     }
 });
