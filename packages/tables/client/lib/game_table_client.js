@@ -7,7 +7,6 @@ GameTable.prototype.enableEventHandlers = function () {
     var gameTable = this;
     GameTables.setHandler = function (event, handler) {
         gameTable.on(event, handler);
-        console.log(gameTable._eventMap);
     }
 }
 
@@ -26,7 +25,6 @@ GameTable.prototype.startGame = function (game) {
 };
 
 GameTable.prototype.leaveTable = function (playerName) {
-    console.log(this._eventMap);
     if(this._eventMap['leaveTable']) {
         _.each(this._eventMap['leaveTable'], function (handler) {
             handler();

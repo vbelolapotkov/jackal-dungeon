@@ -48,7 +48,6 @@ Meteor.methods({
         var player = GameTables.parseUserId(this.userId);
         if(!player || !player.tableId || !player.name) return;
 
-        console.log('CheckMeOutCalled by '+player.name);
         var pirate = Pirates.findOne({tableId: player.tableId, nickname: player.name});
         if(!pirate) throw new Meteor.Error(404, 'Failed to checkout pirate: Not found.');
 
@@ -57,7 +56,6 @@ Meteor.methods({
         });
         var cnt = Tiles.update({ownerId: pirate._id, location: 'onTable'}, {$set: {location: 'inDeck'}});
         if (cnt > 0) DeckController.shuffle(pirate.tableId);
-        console.log(pirate);
         Pirates.remove({_id:pirate._id});
 
         var piratesCnt = Pirates.find({tableId: player.tableId}).count();

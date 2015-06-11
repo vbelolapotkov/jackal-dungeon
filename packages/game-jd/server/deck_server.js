@@ -26,7 +26,8 @@ DeckController.init = function (tiles, options) {
             type: tile.type,
             dIndex: index,
             location: 'inDeck',
-            hasGold: tile.type === 'cavern'
+            hasGold: tile.type === 'goldenHall',
+            hasBackdoor: tile.hasBackdoor
         });
     });
     DeckController.shuffle(tableId);
@@ -44,6 +45,15 @@ DeckController.shuffle = function (tableId) {
 
 Meteor.methods({
     'DeckGetFromTop': function (tableId) {
+        var errMsg = 'Failed to get new tile from deck. ';
+        if(!this.userId) throw new Meteor.Error(403, errMsg + 'Unauthorized access forbidden');
+
+        var user = GameTables.parseUserId(this.userId);
+        if(!user || !user.name || user.tableId !== tableId) throw new Meteor.Error(403, errMsg + 'Unauthorized access forbidden');
+
+        var pirate = Pirates.findOne({tableId: user.tableId, nickname: user.name});
+        if(!pirate) throw new Meteor.Error(404, errMsg + 'Pirate not found.');
+
         var topTile = Tiles.findOne({
             tableId: tableId,
             location: 'inDeck'
@@ -56,7 +66,7 @@ Meteor.methods({
             $set: {
                 location: 'onTable',
                 //coords: { x: 0, y: 0 },
-                ownerId: this.userId
+                ownerId: pirate._id
             },
             $unset: {
                 dIndex: ""

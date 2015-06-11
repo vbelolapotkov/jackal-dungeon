@@ -1,7 +1,8 @@
 JDGameController = function (options) {
     this.tableId = options.tableId;
     this.canvas = options.canvas;
-    this.currentPirate = this.setCurrentPirate(options.currentPirateId);
+    this.currentPirateId = options.currentPirateId;
+    //this.currentPirate = this.setCurrentPirate();
 };
 
 JDGameController.prototype.loadGame = function () {
@@ -32,9 +33,14 @@ JDGameController.prototype.isTableLocked = function () {
 /*
 * Set current pirate id;
 * */
-JDGameController.prototype.setCurrentPirate = function (id) {
-    this.currentPirate = Pirates.findOne(id, {reactive: false});
+//JDGameController.prototype.setCurrentPirate = function () {
+//    this.currentPirate = Pirates.findOne(this.currentPirateId, {reactive: false});
+//};
+
+JDGameController.prototype.getCurrentPirateId = function () {
+    return this.currentPirateId;
 };
+
 
 JDGameController.prototype.releaseResources = function () {
     this.goldController.releaseResources();

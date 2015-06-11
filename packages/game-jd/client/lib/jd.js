@@ -33,7 +33,7 @@ JD = function (tableId) {
     });
 };
 
-JD.prototype.initGame = function (canvasId) {
+JD.prototype.initGame = function (canvasId, currentPirateId) {
     console.log('JD: Initializing Game ...');
     //var w = $('#jdGameContainer').width();
     var w = document.getElementById('jdGameContainer');
@@ -44,6 +44,7 @@ JD.prototype.initGame = function (canvasId) {
         selection: false
     });
     Blaze.renderWithData(Template.JDDice,{tableId: this._id}, w);
+    this.currentPirateId = currentPirateId;
     this.gameController = new JDGameController({
         tableId: this._id,
         canvas: canvas,
@@ -51,11 +52,6 @@ JD.prototype.initGame = function (canvasId) {
     });
     this.gameController.loadGame();
     console.log('JD: Game Initialized');
-};
-
-JD.prototype.setCurrentPirate = function (id) {
-    this.currentPirateId = id;
-    if(this.gameController) this.gameController.setCurrentPirate(id);
 };
 
 JD.prototype.releaseResources = function () {

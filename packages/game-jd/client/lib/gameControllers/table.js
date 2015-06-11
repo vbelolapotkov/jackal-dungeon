@@ -5,6 +5,7 @@ TableController = function (options) {
     this.tableId = options.tableId;
     this.mapController = new cMapController(options.canvas);
     this.tileController = new cTileController(options.canvas);
+    this.gameController = options.gameController;
     this.tileController.createContainer({left: 170, top: 60});
     this.setTableObserver();
 };
@@ -52,7 +53,8 @@ TableController.prototype.dbAddedTileOnTable = function (doc) {
             coords: doc.coords,
             ref: eCoords
         }, function (tile) {
-            tile.showControls();
+            if(doc.ownerId && doc.ownerId === self.gameController.getCurrentPirateId())
+                tile.showControls();
             self.setTileEventHandlers(tile);
         });
     } else this.setTileEventHandlers(tile);

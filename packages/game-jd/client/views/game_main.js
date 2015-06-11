@@ -10,7 +10,6 @@ Template.GameJDMain.onCreated(function () {
         if(err) console.error('JD Game Error:' + err.reason);
         else {
             self.currentPirateId.set(result);
-            self.game.setCurrentPirate(result);
 
             GameTables.setHandler('leaveTable', function () {
                 Meteor.call('PirateCheckMeOut');
@@ -20,10 +19,10 @@ Template.GameJDMain.onCreated(function () {
 });
 
 Template.GameJDMain.onRendered(function () {
-    var game = this.game;
+    var self = this;
     Tracker.autorun(function (c) {
-        if(game.dataReady.get()){
-            game.initGame('jackalCanvas');
+        if(self.game.dataReady.get() && self.currentPirateId.get()){
+            self.game.initGame('jackalCanvas', self.currentPirateId.get());
         }
         //todo: show spinner while loading game data
     });
