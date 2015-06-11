@@ -19,6 +19,10 @@ cPirate.getDefaultRadius = function () {
     return 12.5;
 };
 
+cPirate.prototype.getId = function () {
+    return this.id
+};
+
 cPirate.prototype.getDungeonCoords = function () {
     return {
         x: this.dX,

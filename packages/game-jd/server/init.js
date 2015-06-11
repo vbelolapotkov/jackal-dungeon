@@ -11,5 +11,3 @@ var gameDescriptor = {
 };
 
 GameTables.registerGame(gameDescriptor);
-
-

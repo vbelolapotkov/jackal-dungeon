@@ -29,6 +29,16 @@ cPiratesController.prototype.addNewPirate = function (options) {
 };
 
 /*
+* Removes pirate from canvas
+* @param - {cPirate} p - pirate object
+* */
+cPiratesController.prototype.removePirate = function (p) {
+    if(!p.remove || typeof p.remove !== 'function') return;
+    p.remove();
+    this.canvas.renderAll();
+};
+
+/*
 * Generates default map coords for new pirates
 * @return - {Object} left; top coordinates in map system;
 * */
@@ -70,6 +80,16 @@ cPiratesController.prototype.findPiratesAt = function (dCoords) {
         var piratePosition = p.getDungeonCoords();
         return piratePosition.x === dCoords.x && piratePosition.y === dCoords.y;
     });
+};
+
+/*
+* Return first pirate with supplied id
+* @param - {String} pirate id;
+* */
+cPiratesController.prototype.findPirateById = function (id) {
+    return this.findPirates(function (p) {
+        return p.getId() === id;
+    })[0];
 };
 
 /*

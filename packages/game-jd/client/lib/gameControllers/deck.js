@@ -61,6 +61,10 @@ DeckController.prototype.setDeckObserver = function () {
     });
 };
 
+DeckController.prototype.releaseResources = function () {
+    this.deckObserver.stop();
+};
+
 /*
 * @side_effect - add deckTile to canvas.
 * */

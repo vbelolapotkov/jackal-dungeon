@@ -44,6 +44,27 @@ Meteor.methods({
         //insert new pirate
         return PiratesController.addNewPirate(player.tableId, player.name);
     },
+    'PirateCheckMeOut': function () {
+        var player = GameTables.parseUserId(this.userId);
+        if(!player || !player.tableId || !player.name) return;
+
+        console.log('CheckMeOutCalled by '+player.name);
+        var pirate = Pirates.findOne({tableId: player.tableId, nickname: player.name});
+        if(!pirate) throw new Meteor.Error(404, 'Failed to checkout pirate: Not found.');
+
+        Dice.remove({ownerId: pirate._id}, function (err) {
+            if(err) console.log(err.reason);
+        });
+        var cnt = Tiles.update({ownerId: pirate._id, location: 'onTable'}, {$set: {location: 'inDeck'}});
+        if (cnt > 0) DeckController.shuffle(pirate.tableId);
+        console.log(pirate);
+        Pirates.remove({_id:pirate._id});
+
+        var piratesCnt = Pirates.find({tableId: player.tableId}).count();
+        if(piratesCnt > 0) return;
+        //no pirates left delete tiles
+        Tiles.remove({tableId: player.tableId});
+    },
     'PiratePutGold': function () {
         var player = GameTables.parseUserId(this.userId);
         if(!player || !player.tableId || !player.name)

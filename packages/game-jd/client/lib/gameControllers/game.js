@@ -1,6 +1,7 @@
 JDGameController = function (options) {
     this.tableId = options.tableId;
     this.canvas = options.canvas;
+    this.currentPirate = this.setCurrentPirate(options.currentPirateId);
 };
 
 JDGameController.prototype.loadGame = function () {
@@ -10,8 +11,8 @@ JDGameController.prototype.loadGame = function () {
         canvas: self.canvas,
         gameController: self
     }
-    self.DungeonController = new DungeonController(opts);
-    self.DungeonController.loadMap(function (success) {
+    self.dungeonController = new DungeonController(opts);
+    self.dungeonController.loadMap(function (success) {
         if(!success) {
             console.error('Failed to load game');
             return;
@@ -21,7 +22,6 @@ JDGameController.prototype.loadGame = function () {
         self.tableController = new TableController(opts);
         self.piratesController = new PiratesController(opts);
         self.goldController = new GoldController(opts);
-        self.setPlayersObserver();
     });
 };
 
@@ -30,22 +30,19 @@ JDGameController.prototype.isTableLocked = function () {
 };
 
 /*
- * Set observers of game table players collection
- *
- * */
-JDGameController.prototype.setPlayersObserver = function () {
-    var self = this;
-    var playersCursor = GameTables.getPlayersCursor(self.tableId);
-    playersCursor.observe({
-        changed: function (newDoc, oldDoc) {
-            //todo: Observe players collection
-            //self.piratesController.changeNickname(oldDoc.nickname, newDoc.nickname);
-        },
-        removed: function (oldDoc) {
-            //todo: Observe players collection
-            //self.piratesController.removePirate(oldDoc.nickname);
-        }
-    });
+* Set current pirate id;
+* */
+JDGameController.prototype.setCurrentPirate = function (id) {
+    this.currentPirate = Pirates.findOne(id, {reactive: false});
+};
+
+JDGameController.prototype.releaseResources = function () {
+    this.goldController.releaseResources();
+    this.piratesController.releaseResources();
+    this.tableController.releaseResources();
+    this.deckController.releaseResources();
+    this.dungeonController.releaseResources();
+    this.currentPirate = undefined;
 };
 
 /*

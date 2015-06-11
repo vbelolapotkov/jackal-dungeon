@@ -3,28 +3,29 @@ JD = function (tableId) {
     this._id = tableId || 'demoGame';
     this.dataReady = new ReactiveVar(false);
     var self = this;
-    var ms = Meteor.subscribe('dungeonMap', self._id, function () {
+    this.subs = Object.create(null);
+    this.subs.ms = Meteor.subscribe('dungeonMap', self._id, function () {
         console.log('JD: Map subscription is ready');
     });
-    var ds = Meteor.subscribe('tilesDeck', self._id, function () {
+    this.subs.ds = Meteor.subscribe('tilesDeck', self._id, function () {
         console.log('JD: Deck subscription is ready');
     });
-    var ts = Meteor.subscribe('tilesOnTable', self._id, function () {
+    this.subs.ts = Meteor.subscribe('tilesOnTable', self._id, function () {
         console.log('JD: Table subscription is ready');
     });
-    var ps = Meteor.subscribe('dungeonPirates', self._id, function () {
+    this.subs.ps = Meteor.subscribe('dungeonPirates', self._id, function () {
         console.log('JD: Pirates subscription is ready');
     });
-    var dis = Meteor.subscribe('tableDice', self._id, function () {
+    this.subs.dis = Meteor.subscribe('tableDice', self._id, function () {
         console.log('JD: Dice subscription is ready');
     });
     //subscribe to data if available
     Tracker.autorun(function () {
-        if(ms.ready() &&
-            ds.ready() &&
-            ts.ready() &&
-            ps.ready() &&
-            dis.ready()
+        if(self.subs.ms.ready() &&
+            self.subs.ds.ready() &&
+            self.subs.ts.ready() &&
+            self.subs.ps.ready() &&
+            self.subs.dis.ready()
         ) {
             //all data ready
             self.dataReady.set(true);
@@ -45,8 +46,23 @@ JD.prototype.initGame = function (canvasId) {
     Blaze.renderWithData(Template.JDDice,{tableId: this._id}, w);
     this.gameController = new JDGameController({
         tableId: this._id,
-        canvas: canvas
+        canvas: canvas,
+        currentPirateId: this.currentPirateId
     });
     this.gameController.loadGame();
     console.log('JD: Game Initialized');
+};
+
+JD.prototype.setCurrentPirate = function (id) {
+    this.currentPirateId = id;
+    if(this.gameController) this.gameController.setCurrentPirate(id);
+};
+
+JD.prototype.releaseResources = function () {
+    //release game resources
+    this.gameController.releaseResources();
+    //stop subscriptions
+    _.each(this.subs, function (sub) {
+        sub.stop();
+    });
 };

@@ -5,6 +5,7 @@ Template.GameTablesGamePage.onCreated(function () {
     var instance = this;
 
     instance.gameTable = new GameTable(instance.data.tableId);
+    instance.gameTable.enableEventHandlers();
     instance.currentPlayer = new ReactiveVar ('No name');
     instance.loggingIn = new ReactiveVar (true);
     instance.loggedIn = new ReactiveVar (false);

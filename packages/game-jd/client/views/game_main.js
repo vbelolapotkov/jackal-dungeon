@@ -8,12 +8,18 @@ Template.GameJDMain.onCreated(function () {
     var self = this;
     Meteor.call('PirateCheckMeIn', function (err, result) {
         if(err) console.error('JD Game Error:' + err.reason);
-        else self.currentPirateId.set(result);
+        else {
+            self.currentPirateId.set(result);
+            self.game.setCurrentPirate(result);
+
+            GameTables.setHandler('leaveTable', function () {
+                Meteor.call('PirateCheckMeOut');
+            });
+        }
     });
 });
 
 Template.GameJDMain.onRendered(function () {
-    console.log('Main: template rendered');
     var game = this.game;
     Tracker.autorun(function (c) {
         if(game.dataReady.get()){
@@ -22,6 +28,13 @@ Template.GameJDMain.onRendered(function () {
         //todo: show spinner while loading game data
     });
 });
+
+Template.GameJDMain.onDestroyed(function () {
+    console.log('Releasing game resources...');
+    this.game.releaseResources();
+    console.log('Game resources released.');
+});
+
 
 Template.GameJDMain.helpers({
     currentPirate: function () {

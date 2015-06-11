@@ -18,6 +18,12 @@ Meteor.publish('tilesDeck', function (tableId) {
 });
 
 Meteor.publish('dungeonPirates', function (tableId) {
+    if(!this.userId) return;
+    var user = GameTables.parseUserId(this.userId);
+    if(!user || !user.name || user.tableId !== tableId) {
+        console.log('Failed to subscribe to dungeon pirates. Not authorized');
+        return;
+    }
     return Pirates.find({tableId: tableId});
 });
 

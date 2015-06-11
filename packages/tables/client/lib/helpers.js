@@ -23,12 +23,6 @@ GameTables = {
     },
     setGameUrl: function (routeUrl) {
         Router.route(routeUrl, Routes.game);
-    },
-    /*
-     * Provides cursor to set observers
-     * */
-    getPlayersCursor:function (tableId) {
-        return Players.find({tableId: tableId});
     }
 };
 

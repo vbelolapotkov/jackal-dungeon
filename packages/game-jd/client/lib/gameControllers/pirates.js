@@ -13,7 +13,7 @@ PiratesController = function (options) {
 PiratesController.prototype.setPiratesObserver = function () {
     var self = this;
     self.piratesCursor = Pirates.find({tableId: self.tableId});
-    self.piratesCursor.observe({
+    self.piratesAddRemoveObserver = self.piratesCursor.observe({
         added: function (doc) {
             self.piratesController.addNewPirate({
                 color: doc.color,
@@ -23,7 +23,9 @@ PiratesController.prototype.setPiratesObserver = function () {
             });
         },
         removed: function (oldDoc) {
-            //todo: handle Pirate removed
+            var pirate = self.piratesController.findPirateById(oldDoc._id);
+            if(!pirate) console.error('JD Pirates: Failed to remove pirate from dungeon. Pirate object not found');
+            else self.piratesController.removePirate(pirate);
         }
     });
     var changeHandlersMap = {
@@ -31,7 +33,7 @@ PiratesController.prototype.setPiratesObserver = function () {
         mCoords: handleMCoordsChange,
         color: handleColorChange
     };
-    self.piratesCursor.observeChanges({
+    self.piratesChangedObserver = self.piratesCursor.observeChanges({
         changed: function (id, fields) {
             var pirate = self.piratesController.findPirates(function (p) {
                 return p.id === id;
@@ -47,6 +49,11 @@ PiratesController.prototype.setPiratesObserver = function () {
             });
         }
     });
+};
+
+PiratesController.prototype.releaseResources = function () {
+    this.piratesAddRemoveObserver.stop();
+    this.piratesChangedObserver.stop();
 };
 
 function handleDCoordsChange(pirate, dCoords){

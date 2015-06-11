@@ -49,6 +49,10 @@ DungeonController.prototype.setMapObserver = function () {
     });
 };
 
+DungeonController.prototype.releaseResources = function () {
+    this.mapObserver.stop();
+};
+
 /*
 * @side_effect - attaches tile to map when it is added to map
 * @doc - db doc of new tile

@@ -24,6 +24,10 @@ TableController.prototype.setTableObserver = function () {
     });
 };
 
+TableController.prototype.releaseResources = function () {
+    this.tableObserver.stop();
+};
+
 /*
  * @side_effect - creates tile when it is added to table.
  * @doc - db doc of new tile

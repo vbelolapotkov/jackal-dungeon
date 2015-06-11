@@ -14,7 +14,7 @@ GoldController.prototype.setGoldObserver = function () {
         location: 'onMap',
         hasGold: true
     });
-    self.goldCursor.observe({
+    self.goldObserver = self.goldCursor.observe({
         added: function (newDoc) {
             self.goldController.putGold(newDoc.dCoords, function (gold) {
                 //set event handler on gold double click
@@ -28,6 +28,10 @@ GoldController.prototype.setGoldObserver = function () {
             self.goldController.removeGold(oldDoc.dCoords);
         }
     });
+};
+
+GoldController.prototype.releaseResources = function () {
+    this.goldObserver.stop();
 };
 
 /*
