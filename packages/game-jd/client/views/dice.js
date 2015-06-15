@@ -2,8 +2,8 @@
  * Created by vbelolapotkov on 08/06/15.
  */
 Template.JDDice.onRendered(function () {
-    var single = document.getElementById('jdSingleDice');
-    var dual = document.getElementById('jdDoubleDice');
+    //var single = document.getElementById('jdSingleDice');
+    //var dual = document.getElementById('jdDoubleDice');
     //single.style.backgroundImage = "url('/img/dice_1.png')";
     //dual.style.backgroundImage = "url('/img/dice_2.png')";
 });

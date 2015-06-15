@@ -80,11 +80,11 @@ Template.JDSelectPirateForCompetition.events({
 * */
 function buildCompetitionHeader(type) {
     if(type === 'bet') {
-        return '<img class="jd-icon" src="/img/bet.jpg" alt="Bet icon"/> '+
+        return '<img class="jd-icon" src="/img/bet.png" alt="Bet icon"/> '+
             'Пари на золото';
     }
     else if(type === 'bat') {
-        return '<img class="jd-icon" src="/img/bat.jpg" alt="Bat icon"/> '+
+        return '<img class="jd-icon" src="/img/bat.png" alt="Bat icon"/> '+
             'Летучие мыши';
     }
     else return '';

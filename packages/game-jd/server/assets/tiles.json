@@ -1,50 +1,502 @@
 {
   "backUrl": "/img/tile.jpg",
-  "entranceUrl": "/img/tiles/tile_0.jpg",
+  "entranceUrl": "/img/tiles/tile_00.png",
   "imgPath": "/img/tiles/",
-  "tiles": [{
-    "id": "2",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  },{
-    "id": "3",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  },{
-    "id": "4",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  },{
-    "id": "5",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  },{
-    "id": "6",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  },{
-    "id": "7",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  },{
-    "id": "8",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  },{
-    "id": "9",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  },{
-    "id": "10",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  },{
-    "id": "11",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  },{
-    "id": "12",
-    "imgUrl": "tile_0.jpg",
-    "type": "cavern"
-  }]
+  "tiles": [
+    {
+      "id": "2",
+      "imgUrl": "tile_01.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "3",
+      "imgUrl": "tile_02.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "4",
+      "imgUrl": "tile_03.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "5",
+      "imgUrl": "tile_04.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "6",
+      "imgUrl": "tile_05.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "7",
+      "imgUrl": "tile_06.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "8",
+      "imgUrl": "tile_07.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "9",
+      "imgUrl": "tile_08.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "10",
+      "imgUrl": "tile_09.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "11",
+      "imgUrl": "tile_10.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "12",
+      "imgUrl": "tile_11.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "13",
+      "imgUrl": "tile_12.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "14",
+      "imgUrl": "tile_13.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "15",
+      "imgUrl": "tile_14.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "16",
+      "imgUrl": "tile_15.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "17",
+      "imgUrl": "tile_16.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "18",
+      "imgUrl": "tile_17.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "19",
+      "imgUrl": "tile_18.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "20",
+      "imgUrl": "tile_19.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "21",
+      "imgUrl": "tile_20.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "22",
+      "imgUrl": "tile_21.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "23",
+      "imgUrl": "tile_22.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "24",
+      "imgUrl": "tile_23.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "25",
+      "imgUrl": "tile_24.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "26",
+      "imgUrl": "tile_25.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "27",
+      "imgUrl": "tile_26.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "28",
+      "imgUrl": "tile_27.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "29",
+      "imgUrl": "tile_28.png",
+      "type": "goldenHall"
+    },
+    {
+      "id": "30",
+      "imgUrl": "tile_29.png",
+      "type": "cavern"
+    },
+    {
+      "id": "31",
+      "imgUrl": "tile_29.png",
+      "type": "cavern"
+    },
+    {
+      "id": "32",
+      "imgUrl": "tile_29.png",
+      "type": "cavern"
+    },
+    {
+      "id": "33",
+      "imgUrl": "tile_29.png",
+      "type": "cavern"
+    },
+    {
+      "id": "34",
+      "imgUrl": "tile_30.png",
+      "type": "cave"
+    },
+    {
+      "id": "35",
+      "imgUrl": "tile_31.png",
+      "type": "cave"
+    },
+    {
+      "id": "36",
+      "imgUrl": "tile_32.png",
+      "type": "cave"
+    },
+    {
+      "id": "37",
+      "imgUrl": "tile_33.png",
+      "type": "cave"
+    },
+    {
+      "id": "38",
+      "imgUrl": "tile_34.png",
+      "type": "cave"
+    },
+    {
+      "id": "39",
+      "imgUrl": "tile_35.png",
+      "type": "cave"
+    },
+    {
+      "id": "40",
+      "imgUrl": "tile_36.png",
+      "type": "cave"
+    },
+    {
+      "id": "41",
+      "imgUrl": "tile_37.png",
+      "type": "cave"
+    },
+    {
+      "id": "42",
+      "imgUrl": "tile_38.png",
+      "type": "cave"
+    },
+    {
+      "id": "43",
+      "imgUrl": "tile_39.png",
+      "type": "cave"
+    },
+    {
+      "id": "44",
+      "imgUrl": "tile_40.png",
+      "type": "cave"
+    },
+    {
+      "id": "45",
+      "imgUrl": "tile_41.png",
+      "type": "cave"
+    },
+    {
+      "id": "46",
+      "imgUrl": "tile_42.png",
+      "type": "cave"
+    },
+    {
+      "id": "47",
+      "imgUrl": "tile_43.png",
+      "type": "cave"
+    },
+    {
+      "id": "48",
+      "imgUrl": "tile_44.png",
+      "type": "cave"
+    },
+    {
+      "id": "49",
+      "imgUrl": "tile_45.png",
+      "type": "cave"
+    },
+    {
+      "id": "50",
+      "imgUrl": "tile_46.png",
+      "type": "cave"
+    },
+    {
+      "id": "51",
+      "imgUrl": "tile_47.png",
+      "type": "cave"
+    },
+    {
+      "id": "52",
+      "imgUrl": "tile_48.png",
+      "type": "cave"
+    },
+    {
+      "id": "53",
+      "imgUrl": "tile_49.png",
+      "type": "cave"
+    },
+    {
+      "id": "54",
+      "imgUrl": "tile_50.png",
+      "type": "cave"
+    },
+    {
+      "id": "55",
+      "imgUrl": "tile_51.png",
+      "type": "cave"
+    },
+    {
+      "id": "56",
+      "imgUrl": "tile_52.png",
+      "type": "cave"
+    },
+    {
+      "id": "57",
+      "imgUrl": "tile_53.png",
+      "type": "cave"
+    },
+    {
+      "id": "58",
+      "imgUrl": "tile_54.png",
+      "type": "cave"
+    },
+    {
+      "id": "59",
+      "imgUrl": "tile_55.png",
+      "type": "cave"
+    },
+    {
+      "id": "60",
+      "imgUrl": "tile_56.png",
+      "type": "cave"
+    },
+    {
+      "id": "61",
+      "imgUrl": "tile_57.png",
+      "type": "cave"
+    },
+    {
+      "id": "62",
+      "imgUrl": "tile_58.png",
+      "type": "cave"
+    },
+    {
+      "id": "63",
+      "imgUrl": "tile_59.png",
+      "type": "cave"
+    },
+    {
+      "id": "64",
+      "imgUrl": "tile_60.png",
+      "type": "cave"
+    },
+    {
+      "id": "65",
+      "imgUrl": "tile_61.png",
+      "type": "cave"
+    },
+    {
+      "id": "66",
+      "imgUrl": "tile_62.png",
+      "type": "cave"
+    },
+    {
+      "id": "67",
+      "imgUrl": "tile_63.png",
+      "type": "cave"
+    },
+    {
+      "id": "68",
+      "imgUrl": "tile_64.png",
+      "type": "cave"
+    },
+    {
+      "id": "69",
+      "imgUrl": "tile_65.png",
+      "type": "cave"
+    },
+    {
+      "id": "70",
+      "imgUrl": "tile_66.png",
+      "type": "cave"
+    },
+    {
+      "id": "71",
+      "imgUrl": "tile_67.png",
+      "type": "cave"
+    },
+    {
+      "id": "72",
+      "imgUrl": "tile_68.png",
+      "type": "cave"
+    },
+    {
+      "id": "73",
+      "imgUrl": "tile_69.png",
+      "type": "cave"
+    },
+    {
+      "id": "74",
+      "imgUrl": "tile_70.png",
+      "type": "cave"
+    },
+    {
+      "id": "75",
+      "imgUrl": "tile_71.png",
+      "type": "cave"
+    },
+    {
+      "id": "76",
+      "imgUrl": "tile_72.png",
+      "type": "cave"
+    },
+    {
+      "id": "77",
+      "imgUrl": "tile_73.png",
+      "type": "cave"
+    },
+    {
+      "id": "78",
+      "imgUrl": "tile_74.png",
+      "type": "cave"
+    },
+    {
+      "id": "79",
+      "imgUrl": "tile_75.png",
+      "type": "cave"
+    },
+    {
+      "id": "80",
+      "imgUrl": "tile_76.png",
+      "type": "cave"
+    },
+    {
+      "id": "81",
+      "imgUrl": "tile_77.png",
+      "type": "cave"
+    },
+    {
+      "id": "82",
+      "imgUrl": "tile_78.png",
+      "type": "cave"
+    },
+    {
+      "id": "83",
+      "imgUrl": "tile_79.png",
+      "type": "cave"
+    },
+    {
+      "id": "84",
+      "imgUrl": "tile_80.png",
+      "type": "cave"
+    },
+    {
+      "id": "85",
+      "imgUrl": "tile_81.png",
+      "type": "cave"
+    },
+    {
+      "id": "86",
+      "imgUrl": "tile_82.png",
+      "type": "cave"
+    },
+    {
+      "id": "87",
+      "imgUrl": "tile_83.png",
+      "type": "cave"
+    },
+    {
+      "id": "88",
+      "imgUrl": "tile_84.png",
+      "type": "cave"
+    },
+    {
+      "id": "89",
+      "imgUrl": "tile_85.png",
+      "type": "cave"
+    },
+    {
+      "id": "90",
+      "imgUrl": "tile_86.png",
+      "type": "cave"
+    },
+    {
+      "id": "91",
+      "imgUrl": "tile_87.png",
+      "type": "cave"
+    },
+    {
+      "id": "92",
+      "imgUrl": "tile_88.png",
+      "type": "cave"
+    },
+    {
+      "id": "93",
+      "imgUrl": "tile_89.png",
+      "type": "cave"
+    },
+    {
+      "id": "94",
+      "imgUrl": "tile_90.png",
+      "type": "cave"
+    },
+    {
+      "id": "95",
+      "imgUrl": "tile_91.png",
+      "type": "cave"
+    },
+    {
+      "id": "96",
+      "imgUrl": "tile_92.png",
+      "type": "cave"
+    },
+    {
+      "id": "97",
+      "imgUrl": "tile_93.png",
+      "type": "cave"
+    },
+    {
+      "id": "98",
+      "imgUrl": "tile_94.png",
+      "type": "cave"
+    },
+    {
+      "id": "99",
+      "imgUrl": "tile_95.png",
+      "type": "cave"
+    },
+    {
+      "id": "100",
+      "imgUrl": "tile_96.png",
+      "type": "cave"
+    }
+  ]
 }

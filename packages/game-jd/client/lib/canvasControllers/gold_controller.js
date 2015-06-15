@@ -5,7 +5,7 @@ cGoldController = function (canvas) {
     this.canvas = canvas;
     this.mapController = new cMapController(canvas);
     this.CTYPE = 'cGold';
-    this.IMG_URL = '/img/gold.jpg';
+    this.IMG_URL = '/img/gold.png';
 };
 
 /*
