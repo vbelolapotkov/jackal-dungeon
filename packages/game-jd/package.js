@@ -1,6 +1,6 @@
 Package.describe({
     summary: "Jackal The Dungeon",
-    version: "0.0.0",
+    version: "0.1.0",
     name: "simterface:game-jd"
 });
 
