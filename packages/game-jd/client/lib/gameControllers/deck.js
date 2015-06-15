@@ -20,7 +20,7 @@ DeckController.prototype.loadDeck = function () {
     var self = this;
 
     //display deck as tile back img
-    var backUrl = Tiles.findOne({tableId: self.tableId, type: 'back'},{reactive: false}).backUrl;
+    var backUrl = Tiles.findOne({tableId: self.tableId, backUrl: {$ne: null}},{reactive: false}).backUrl;
     var coords = self.deckController.container.getPosition();
     var opts = {
         url: backUrl,
@@ -48,11 +48,8 @@ DeckController.prototype.setDeckObserver = function () {
         });
     this.deckObserver = self.tilesInDeck.observe({
         added: function () {
-            self.shuffle();
             if(self.deckHidden)
                 self.showDeck();
-
-
         },
         removed: function () {
             if(self.deckIsEmpty())
@@ -91,21 +88,12 @@ DeckController.prototype.getFromTop = function () {
     if(self.gameController.isTableLocked()) {
         console.log('Cannot take new tile: locked');
         return;
-    }
+    } else self.gameController.lockTable();
     //Move tile from deckController to table
     Meteor.call('DeckGetFromTop',self.tableId, function (err) {
         if(err) {
             console.log(err.reason);
         }
-    });
-};
-
-/*
-* @side_effect asks server to shuffle the deck
-* */
-DeckController.prototype.shuffle = function () {
-    Meteor.call('DeckShuffle', this.tableId, function (err) {
-        if(err) console.log(err.reason);
     });
 };
 

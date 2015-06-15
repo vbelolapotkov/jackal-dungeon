@@ -185,25 +185,23 @@ cMapController.prototype.attachTile = function (tile, dCoords) {
 
     if(!tileController.isTile(tile)) {
         //tile - tile options
-        var entrance = self.map.getEntrance();
-        var eCCoords = self.coordsMap2Canvas(entrance.getPosition());
+        var eCCoords = self.getEntranceCoords();
         //todo: replace fixed number to tile size
         var cCoords = {
             left: Math.round(eCCoords.left + dCoords.x*100),
             top: Math.round(eCCoords.top + dCoords.y*100)
         };
-        /*
-        * using async constructor here because with sync empty tile shown
-        * on iPad when tile attached to map by other player
-        * */
-        cTile.fromURL({
-                url: tile.url,
-                id: tile.id,
-                left: cCoords.left,
-                top: cCoords.top
-            }, function (tObj) {
-                updateCanvasOnAttach(tObj, dCoords);
+
+        //using sync constructor to prevent async adding to canvas
+        var tObj = new cTile({
+            url: tile.url,
+            id: tile.id,
+            angle: tile.angle || 0,
+            left: cCoords.left,
+            top: cCoords.top
         });
+        updateCanvasOnAttach(tObj, dCoords);
+
     } else {
         self.alignTile(tile, dCoords);
         updateCanvasOnAttach(tile, dCoords);
@@ -291,9 +289,11 @@ cMapController.prototype.removeEmptyTile = function (dCoords) {
         this.logNotFound('addEmptyTiles');
         return;
     };
-    var t = this.map.getTileAt(dCoords, 'emptyTile');
+    var t = this.map.getAllTilesAt(dCoords, 'emptyTile');
     if(!t) return;
-    this.map.remove(t);
+    _.each(t, function (tile) {
+        this.map.remove(tile);
+    }, this)
     this.canvas.renderAll();
 };
 

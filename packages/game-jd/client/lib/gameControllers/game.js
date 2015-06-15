@@ -30,6 +30,10 @@ JDGameController.prototype.isTableLocked = function () {
     return this.tableController.isTableLocked();
 };
 
+JDGameController.prototype.lockTable = function () {
+    this.tableController.lock();
+};
+
 /*
 * Set current pirate id;
 * */

@@ -5,8 +5,12 @@ cTile = fabric.util.createClass(fabric.Image, {
     initialize: function (options, element) {
         //element is optional
         //method creates img from options.url if element is not passed
+        var self = this;
         if(!element) {
             element = document.createElement('img');
+            element.onload = function () {
+                if(self.canvas) self.canvas.renderAll();
+            };
             element.src = options.url;
         }
         options || (options = {});
@@ -86,6 +90,12 @@ cTile.fromURL = function (options, callback) {
 
 cTile.prototype.getId = function () {
     return this.id;
+};
+
+cTile.prototype.setPosition = function (cCoords) {
+    this.left = cCoords.left;
+    this.top = cCoords.top;
+    this.setCoords();
 };
 
 cTile.prototype.getPosition = getCoords;

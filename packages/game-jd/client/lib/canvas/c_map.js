@@ -78,6 +78,20 @@ cMap.prototype.getTileAt = function (dCoords, type) {
 };
 
 /*
+ * @return - return tiles of specified type with specific dCoords
+ * @dCoords - {x,y} tile coords on dungeon map with reference to entrance tile {x:0,y:0}
+ * @type - (optional) type of tile: emptyTile or cTile. If not defined search for any type
+ * */
+cMap.prototype.getAllTilesAt = function (dCoords, type) {
+    var tiles = this.getObjects(type);
+    var t = _.filter(tiles, function (t) {
+        var currentDCoords = t.getDungeonCoords();
+        return currentDCoords.x === dCoords.x && currentDCoords.y === dCoords.y;
+    });
+    return t;
+};
+
+/*
  * checks if there is a tile at dCoords
  * @return - boolean
  * @type - (optional) type of the tile to check

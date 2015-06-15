@@ -216,6 +216,10 @@ TableController.prototype.returnTileToDeck = function (options) {
         }
     }, function (err) {
         if (err) console.log(err.reason);
+        //shuffle deck on return
+        Meteor.call('JDShuffleDeck', self.tableId, function (err) {
+            if(err) console.error(err.reason);
+        });
     });
 };
 

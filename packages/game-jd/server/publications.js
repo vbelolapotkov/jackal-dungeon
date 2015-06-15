@@ -14,7 +14,15 @@ Meteor.publish('tilesOnTable', function (tableId) {
 });
 
 Meteor.publish('tilesDeck', function (tableId) {
-    return Tiles.find({tableId: tableId, location: 'inDeck'},{fields:{imgUrl: 0}});
+    if(!this.userId) return;
+    return Tiles.find({tableId: tableId, location: 'inDeck'},{
+        fields:{
+            location: 1,
+            tableId: 1,
+            dIndex: 1,
+            backUrl: 1
+        }
+    });
 });
 
 Meteor.publish('dungeonPirates', function (tableId) {

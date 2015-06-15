@@ -34,12 +34,21 @@ DeckController.init = function (tiles, options) {
 };
 
 DeckController.shuffle = function (tableId) {
-    var cursor = Tiles.find({tableId:tableId,location: 'inDeck', type: {$ne: 'back'}});
-    var cnt = cursor.count();
+    var tileIds = Tiles.find({
+            tableId:tableId,
+            location: 'inDeck',
+            type: {$ne: 'back'}
+        }, {
+            fields: {_id:1},
+            reactive: false
+        }).map(function (t) {
+            return t._id;
+        });
+    var cnt = tileIds.length;
     var shuffledIndex = _.shuffle(_.range(cnt));
-    cursor.map(function (tile, index) {
-        Tiles.update(tile._id, {$set: {dIndex: shuffledIndex[index]}});
-    }, shuffledIndex);
+    tileIds.forEach(function (tileId, index) {
+        Tiles.update(tileId, {$set: {dIndex: shuffledIndex[index]}});
+    });
 };
 
 
@@ -65,7 +74,6 @@ Meteor.methods({
         Tiles.update(topTile._id, {
             $set: {
                 location: 'onTable',
-                //coords: { x: 0, y: 0 },
                 ownerId: pirate._id
             },
             $unset: {
@@ -73,8 +81,9 @@ Meteor.methods({
             }
         });
     },
-    'DeckShuffle': function (tableId) {
+    'JDShuffleDeck': function (tableId) {
         //todo: add check if action allowed to current user
+        if(!this.userId) return;
         DeckController.shuffle(tableId);
     }
 });
