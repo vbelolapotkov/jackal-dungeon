@@ -44,7 +44,7 @@ retry@1.0.3
 routepolicy@1.0.5
 sacha:spin@0.1.6
 session@1.1.0
-simterface:game-jd@0.0.0
+simterface:game-jd@0.1.0
 simterface:game-tables@0.0.0
 spacebars@1.0.6
 spacebars-compiler@1.0.6
