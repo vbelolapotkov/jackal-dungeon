@@ -23,8 +23,9 @@ Package.onUse(function (api) {
         'collections.js'
     ], both);
 
+    api.addAssets([ 'server/assets/tiles.json' ], 'server');
+
     api.addFiles([
-        'server/assets/tiles.json',
         'server/map_server.js',
         'server/deck_server.js',
         'server/pirates_server.js',
